@@ -1,0 +1,43 @@
+\documentclass{article}
+
+\begin{document}
+
+\title{A Latex Document Outline}
+
+\author{Peter J Smith}
+
+\maketitle
+
+\begin{abstract}
+\textbf{If you need an abstract, then it goes here. While you are reading this document, please also criticise it for the writing style, grammar, consistency, suitability, etc. }
+\end{abstract}
+
+\section{Introduction}\label{intro}
+In the introduction, the main material is usually text, references and lists. Note that we label sections in case we want to refer to them. See the tex command where we declare a section called Introduction. After this, you see that we also define a label for this section. The contents of this file are as follows: 
+\begin{itemize}
+\item We give the outline of a file with different sections and sub-sections. 
+\item We also include an example of a list of bullet items.
+\end{itemize}
+
+In the introduction there is often a literature review that traditionally would include books \cite{gradshteyn2007,directional}, journal articles \cite{mrc_paper} and conference papers \cite{zhu_matrix}. Assorted types of publications such as reports \cite{3GPP}, theses \cite{Tataria_PhDThesis} and newspaper articles are also common. Finally. there is a profusion of online material with its own type of referencing style. 
+
+
+
+\section{Analysis}\label{analysis}
+The section on analysis is split into two sub-sections. 
+
+\subsection{Analysis: Part 1}\label{analysis1}
+Here is the first part.
+
+\subsection{Analysis: Part 2}\label{analysis2}
+Here is the second part where which refer back to Sec. \ref{analysis1}.
+
+\section{Numerical Results}\label{NumRes}
+ Here, you often discuss the mathematics and any results using tables, graphics, etc. Perhaps you refer back to a previous section such as Sec. \ref{intro} for some reason.
+ 
+ \section{Conclusions}\label{Conc}
+ 
+\bibliographystyle{IEEEtran}
+\bibliography{sample_bibliography}
+
+\end{document}
