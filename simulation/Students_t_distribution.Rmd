@@ -1,0 +1,146 @@
+---
+title: "STAT480-Simulation"
+author: "Quan Zhao"
+date: "2023-12-19"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## PDF and CDF of dist
+
+PDF of student's t-distribution
+
+$$
+f(t) = \frac{\Gamma\left(\frac{\nu + 1}{2}\right)}{\sqrt{\nu\pi}\,\Gamma\left(\frac{\nu}{2}\right)} \left(1 + \frac{t^2}{\nu} \right)^{-\frac{\nu + 1}{2}}
+$$
+
+CDF of student's t-distribution
+
+$$
+F(t) = \int_{-\infty}^{t} f(u)\, du
+$$
+
+```{r}
+# Student's t PDF
+student_t_pdf <- function(t, nu) {
+  gamma((nu + 1) / 2) / (sqrt(nu * pi) * gamma(nu / 2)) * (1 + (t^2) / nu)^(-(nu + 1) / 2)
+}
+
+# Student's t CDF (using numerical integration)
+student_t_cdf <- function(t, nu) {
+  integrate(function(x) student_t_pdf(x, nu), lower = -Inf, upper = t)$value
+}
+
+# Example usage
+nu <- 5 # degrees of freedom
+t_value <- 2
+
+# Calculate PDF
+pdf_value <- student_t_pdf(t_value, nu)
+
+# Calculate CDF
+cdf_value <- student_t_cdf(t_value, nu)
+
+# Print results
+print(paste("PDF at t =", t_value, ":", pdf_value))
+print(paste("CDF at t =", t_value, ":", cdf_value))
+
+```
+
+# Plot examples of the density; display the parameters that you chose.
+
+```{r}
+# Load necessary library
+library(ggplot2)
+
+# Set degrees of freedom
+nu <- 5
+
+plot_dist <- function(nu) {
+
+# Create a sequence of t values
+t_values <- seq(-5, 5, by = 0.1)
+
+# Calculate PDF and CDF for each t value
+pdf_values <- sapply(t_values, student_t_pdf, nu = nu)
+cdf_values <- sapply(t_values, student_t_cdf, nu = nu)
+
+# Create a data frame for plotting
+data_for_plot <- data.frame(t = t_values, PDF = pdf_values, CDF = cdf_values)
+
+# Plot PDF
+pdf_plot <- ggplot(data_for_plot, aes(x = t, y = PDF)) +
+  geom_line(color = 'blue') +
+  ggtitle('PDF of Student\'s t-Distribution') +
+  xlab('t value') +
+  ylab('Density')
+
+# Plot CDF
+cdf_plot <- ggplot(data_for_plot, aes(x = t, y = CDF)) +
+  geom_line(color = 'red') +
+  ggtitle('CDF of Student\'s t-Distribution') +
+  xlab('t value') +
+  ylab('Cumulative Probability')
+
+# Display plots
+print(pdf_plot)
+print(cdf_plot)
+}
+
+plot_dist(nu)
+```
+
+When the Degree of freedom is 1, then Student's t-distribution is standard Cauchy distribution.
+
+```{r}
+nu <- 1
+plot_dist(nu)
+```
+
+# Propose your own pseudorandom number generator that produces deviates from the Student's t distribution
+
+```{r}
+generate_t_distribution <- function(n, nu) {
+  Z <- rnorm(n)
+  X <- rchisq(n, df = nu)
+  T <- Z / sqrt(X / nu)
+  return(T)
+}
+
+# Example usage
+n <- 1000    # number of random values to generate
+nu <- 5      # degrees of freedom
+t_values <- generate_t_distribution(n, nu)
+
+# You can plot to see the distribution
+hist(t_values, breaks = 30, main = "Generated Student's t-Distribution", xlab = "T-values")
+
+```
+
+# 5. Given $X = (X_{1},X_{2}, ...,X_{n})$ a random sample of i.i.d. Student's t variables,
+
+## obtain your own ***maximum likelihood estimator*** for (a,b), say $\widehat{(a,b)}_{ML}$. Implement it.
+
+```{r}
+# Assuming you have a dataset 'data' and a known value of 'nu'
+log_likelihood <- function(params, data, nu) {
+  a <- params[1]
+  b <- params[2]
+  n <- length(data)
+  sum(log(dstudent_t(data, a, b, nu)))
+}
+
+# dstudent_t is a function to compute the PDF of the Student's t-distribution
+
+# Optimization to find MLE
+mle <- optim(c(initial_a, initial_b), log_likelihood, data = data, nu = nu)
+
+# Results
+mle_a <- mle$par[1]
+mle_b <- mle$par[2]
+
+```
+
