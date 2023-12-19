@@ -9,6 +9,11 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+set.seed(123)
+```
+
+
 ## PDF and CDF of dist
 
 PDF of student's t-distribution
@@ -125,22 +130,63 @@ hist(t_values, breaks = 30, main = "Generated Student's t-Distribution", xlab = 
 ## obtain your own ***maximum likelihood estimator*** for (a,b), say $\widehat{(a,b)}_{ML}$. Implement it.
 
 ```{r}
-# Assuming you have a dataset 'data' and a known value of 'nu'
-log_likelihood <- function(params, data, nu) {
-  a <- params[1]
-  b <- params[2]
-  n <- length(data)
-  sum(log(dstudent_t(data, a, b, nu)))
+# Student's t PDF function
+student_t_pdf <- function(t, nu) {
+  gamma((nu + 1) / 2) / (sqrt(nu * pi) * gamma(nu / 2)) * (1 + (t^2) / nu)^(-(nu + 1) / 2)
 }
 
-# dstudent_t is a function to compute the PDF of the Student's t-distribution
+# Log-Likelihood function using the custom Student's t PDF
+log_likelihood_t <- function(v, data) {
+  sum(log(sapply(data, student_t_pdf, nu = v)))
+}
 
-# Optimization to find MLE
-mle <- optim(c(initial_a, initial_b), log_likelihood, data = data, nu = nu)
+# Function to find MLE of degrees of freedom (v)
+mle_t_distribution <- function(data) {
+  # Ensure data does not contain non-finite values
+  data <- data[is.finite(data)]
+  
+  # Optim function with bounds for v and adjusted initial value
+  mle <- optim(par = 4, fn = function(v) -log_likelihood_t(v, data), 
+               method = "L-BFGS-B", lower = 2, upper = 30, control = list(fnscale = -1))
+  return(mle$par)
+}
 
-# Results
-mle_a <- mle$par[1]
-mle_b <- mle$par[2]
+# Generate random data using the custom Student's t distribution function
+data_sample <- generate_t_distribution(100, 5)  # Example data generation
+
+# Estimate degrees of freedom using MLE
+estimated_v <- mle_t_distribution(data_sample)
+print(estimated_v)
+
+```
+
+
+# Improve by Bootstrap
+
+```{r}
+# Bootstrap-enhanced MLE function
+bootstrap_mle_t_distribution <- function(original_data, n_bootstrap = 1000) {
+  bootstrap_estimates <- numeric(n_bootstrap)
+
+  for (i in 1:n_bootstrap) {
+    # Create a bootstrap sample
+    bootstrap_sample <- sample(original_data, size = length(original_data), replace = TRUE)
+
+    # Estimate v using MLE for the bootstrap sample
+    estimated_v <- optim(par = 4, fn = function(v) -log_likelihood_t(v, bootstrap_sample), 
+                         method = "L-BFGS-B", lower = 2, upper = 30, control = list(fnscale = -1))$par
+    bootstrap_estimates[i] <- estimated_v
+  }
+
+  # Aggregate results: mean or median can be used
+  final_estimate <- mean(bootstrap_estimates)
+  return(list(estimate = final_estimate, bootstrap_estimates = bootstrap_estimates))
+}
+
+# Example usage
+data_sample <- generate_t_distribution(100, 5)  # Generate sample data
+result <- bootstrap_mle_t_distribution(data_sample)
+print(result$estimate)
 
 ```
 
