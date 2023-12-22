@@ -2,7 +2,7 @@
 *.fdb_latexmk
 *.fls
 *.log
-*.pdf
+literature_reviews/*.pdf
 *.bbl
 *.blg
 *.synctex.gz
