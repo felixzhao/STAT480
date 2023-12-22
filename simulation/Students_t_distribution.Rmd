@@ -190,3 +190,47 @@ print(result$estimate)
 
 ```
 
+
+# estimate sample
+```{r}
+library(reshape2)
+```
+
+
+```{r}
+set.seed(seed=1234567890, kind="Mersenne-Twister")
+
+N <- c(5, 10, 100)
+Rf <- 30000 # There will be 6000, 3000, and 300 replications for each element in N
+Output <- NULL
+
+for(n in N){ # Loop for first factor
+  for(r in 1:round(Rf/n)){ # Replications loop
+    x <- rexp(n) # Same sample for all estimators
+    Output <- rbind(Output, 
+                    c(n,
+                      mean(x),
+                      median(x)/log(2)))
+  }
+}
+
+Output <- data.frame(Output)
+names(Output) <- c("n", "ML", "Med")
+Output$n <- as.factor(Output$n)
+
+Output.melt <- melt(data=Output, 
+                    id.vars=1,
+                    measure.vars=2:3,
+                    variable.name="Estimator",
+                    value.name="Estimates")
+```
+
+```{r}
+ggplot(Output.melt, aes(x=Estimates, col=Estimator)) +
+  geom_vline(xintercept = 1, col="gray") +
+  geom_density(linewidth=1.2) +
+  ylab("Empirical densities") +
+  facet_wrap(~n)
+```
+
+
