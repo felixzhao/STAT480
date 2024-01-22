@@ -22,16 +22,47 @@ death using OpenSAFELY''}
 % 5. Write it - 2:34
 
 \section{Introduction}
-introduction of the research topic
-(1/2 to 1 page).
+% introduction of the research topic
+% (1/2 to 1 page).
+
+This work is a review of paper ``Factors associated with COVID-19-related
+death using OpenSAFELY''~\cite{williamson2020factors}
+
+% The paper presents a large-scale observational study that aims to identify key demographic characteristics and comorbidities associated with poor outcomes in COVID-19 patients. The study utilized electronic health records from a substantial portion of the English population and employed various statistical methods, including Cox proportional hazards regression models, sensitivity analyses, multiple imputation, and Bayesian analysis.
+The paper presents a comprehensive analysis of risk factors contributing to COVID-19-related deaths. It is a significant study utilizing OpenSAFELY, a novel analytics platform that accessed data from primary care records of over 17 million adults in England. The research identified several key risk factors, including age, gender, ethnicity, and pre-existing health conditions. Notably, it highlighted a higher risk of COVID-19-related deaths among males, older individuals, people belonging to Black and South Asian ethnicities, and those with underlying health conditions such as diabetes and severe asthma. The study's findings are crucial for informing public health responses and policies, particularly in understanding the disparities in COVID-19 impact across different demographic groups. This research is a pivotal contribution to the ongoing efforts to combat the COVID-19 pandemic, offering insights into vulnerable populations and guiding targeted interventions.
 
 \section{literature review}
-The section on analysis is split into two sub-sections. 
-(about 2-3 pages)
+% The section on analysis is split into two sub-sections.  (about 2-3 pages)
 
-~\cite{williamson2020factors}
+\subsection*{pros and cons of the study}
+
+The study has several strengths, including its large scale, which allows for more precision on rarer exposures and multiple factors, and rapid detection of important signals. The use of open methods, pre-specification of the analysis plan, and sharing of the full analytic code and codelists for review and reuse enhance the transparency and reproducibility of the study. Additionally, the study utilized full pseudonymized longitudinal primary care records, providing substantially more detail than data recorded on hospital admission and accounting for the total population rather than a selected subset. The study also censored deaths from other causes using data from the UK Office for National Statistics and stratified analyses by area to account for known geographical differences in the incidence of COVID-19.
+
+
+However, the study also has limitations. The inclusion of clinically suspected (non-laboratory-confirmed) cases of COVID-19 in the outcome definition due to testing not always being carried out, especially in older patients in care homes, may introduce some uncertainty. Additionally, the study's observational nature means that it cannot establish causality, and the authors caution against interpreting the estimates as causal effects. Furthermore, the study's reliance on electronic health records introduces the potential for biases related to data collection and recording practices. These limitations should be considered when interpreting the findings
+
+\subsection*{Pros and Cons of the statistical methodology}
+
+The statistical methodology used in the study has several strengths. The study conducted sensitivity analyses to assess the robustness of the estimates to assumptions around missing data, which enhances the reliability of the findings. The use of open methods, pre-specification of the analysis plan, and sharing of the full analytic code and codelists for review and reuse contribute to the transparency and reproducibility of the statistical analyses. Additionally, the study provided detailed descriptions of the statistical parameters, including central tendency, variation, and associated estimates of uncertainty, which are essential for understanding the precision of the estimates. The study also utilized hierarchical and complex designs and appropriately identified the level for tests and reported outcomes, which is important for analyzing population-level data.
+
+However, the statistical methodology also has limitations. The study's observational nature means that it cannot establish causality, and the authors caution against interpreting the estimates as causal effects. Additionally, the study's reliance on electronic health records introduces the potential for biases related to data collection and recording practices, which may impact the validity of the statistical analyses. These limitations should be considered when interpreting the statistical findings.
+
+\subsection*{Relationship between the ``smoking'' variable and COVID-19-related death}
+
+The study found that both current and former smoking were initially associated with a higher risk of COVID-19-related death when adjusted for age and sex only. However, in the fully adjusted model, current smoking was associated with a lower risk of COVID-19-related death. This finding concurs with the lower than expected prevalence of smoking observed in previous studies among patients with COVID-19 in China, France, and the United States. 
+The authors caution that the fully adjusted smoking hazard ratio does not capture the causal effect of smoking, as it includes comorbidities that are likely to mediate any effect of smoking on COVID-19-related death, such as chronic obstructive pulmonary disease.
+
 
 \section{Conclusions}
+
+Strengths of the study include its large scale, which allows for more precision on rarer exposures and multiple factors, and rapid detection of important signals. The use of open methods, pre-specification of the analysis plan, and sharing of the full analytic code and codelists enhance the transparency and reproducibility of the study. Additionally, the study provided detailed descriptions of the statistical parameters, including central tendency, variation, and associated estimates of uncertainty, which are essential for understanding the precision of the estimates.
+
+However, the study also has limitations. The inclusion of clinically suspected (non-laboratory-confirmed) cases of COVID-19 in the outcome definition due to testing not always being carried out may introduce some uncertainty. The observational nature of the study means that it cannot establish causality, and the authors caution against interpreting the estimates as causal effects. Additionally, the study's reliance on electronic health records introduces the potential for biases related to data collection and recording practices.
+
+The study provides valuable insights into the risk factors associated with the COVID-19-related death, 
+but its findings should be interpreted with caution due to the study's limitations. 
+The transparency and reproducibility of the study's methods enhance its credibility, and the results may be used to inform the development of prognostic models. 
+However, further research is needed to explore the causal relationships underlying the associations observed in the study.
 
 \bibliographystyle{plain}
 \bibliography{bibliography} % Replace 'yourbibfile' with the name of your .bib file
