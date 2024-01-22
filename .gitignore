@@ -6,3 +6,5 @@ literature_reviews/*.pdf
 *.bbl
 *.blg
 *.synctex.gz
+
+.DS_Store
