@@ -13,7 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 set.seed(123)
 ```
 
-
 ## PDF and CDF of dist
 
 PDF of student's t-distribution
@@ -160,7 +159,6 @@ print(estimated_v)
 
 ```
 
-
 # Improve by Bootstrap
 
 ```{r}
@@ -190,12 +188,11 @@ print(result$estimate)
 
 ```
 
-
 # estimate sample
+
 ```{r}
 library(reshape2)
 ```
-
 
 ```{r}
 set.seed(seed=1234567890, kind="Mersenne-Twister")
@@ -226,6 +223,28 @@ Output.melt <- melt(data=Output,
 ```
 
 ```{r}
+Output
+```
+
+```{r}
+df2 <- Output %>% group_by(n) %>% 
+  summarise(ML=mean(ML),
+            Med= mean(Med),
+            .groups = 'drop') %>%
+  as.data.frame()
+
+df2
+```
+
+
+```{r}
+ggplot(data=Output, aes(x=n, y=ML, group=1)) +
+  geom_line()+
+  geom_point()
+```
+
+
+```{r}
 ggplot(Output.melt, aes(x=Estimates, col=Estimator)) +
   geom_vline(xintercept = 1, col="gray") +
   geom_density(linewidth=1.2) +
@@ -233,4 +252,42 @@ ggplot(Output.melt, aes(x=Estimates, col=Estimator)) +
   facet_wrap(~n)
 ```
 
+```{r}
+ggplot(Output.melt, 
+       aes(x=n, y=Estimates, fill=Estimator)) +
+  geom_hline(yintercept=1, col="gray") +
+  geom_boxplot(notch=TRUE) +
+  xlab(expression(italic(n)))
+```
 
+```{r}
+bootstrap.median <- function(x, B){
+  sample_size <- length(x)
+  t <- median(x)/log(2)
+  
+  if(sample_size^sample_size<B) {
+        m.Bootstrap <- permutations(n=sample_size, 
+                                    r=sample_size, 
+                                    v=x, 
+                                    repeats.allowed=FALSE)
+        return(2*t - mean(unlist(lapply(m.Bootstrap, median))))
+  } else {
+    v.Bootstrap <- rep(0, B)
+    for(b in 1:B) {
+      bx <- sample(x, replace = TRUE)
+      v.Bootstrap[b] <- median(bx) / log(2)
+    }
+      return(2*t - mean(v.Bootstrap))
+  }
+}
+```
+
+```{r}
+ggplot(summary.information, 
+       aes(x=n, y=mean, colour=Estimator, group=Estimator)) + 
+  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.1) +
+  geom_line() +
+  geom_point(size=3, shape=21, fill="white") +
+  xlab(expression(italic(n))) +
+  ylab("Mean and Error Bars")
+```
