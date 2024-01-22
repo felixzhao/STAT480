@@ -8,3 +8,4 @@ literature_reviews/*.pdf
 *.synctex.gz
 
 .DS_Store
+*.pdf
