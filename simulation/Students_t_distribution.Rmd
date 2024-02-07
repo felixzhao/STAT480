@@ -107,6 +107,8 @@ plot_dist(nu)
 # Propose your own pseudorandom number generator that produces deviates from the Student's t distribution
 
 ```{r}
+# this not use runif only, thus ignore it
+
 generate_t_distribution <- function(n, nu) {
   Z <- rnorm(n)
   X <- rchisq(n, df = nu)
@@ -121,6 +123,50 @@ t_values <- generate_t_distribution(n, nu)
 
 # You can plot to see the distribution
 hist(t_values, breaks = 30, main = "Generated Student's t-Distribution", xlab = "T-values")
+
+```
+
+```{r}
+generate_normal <- function(n) {
+  # Generate n/2 pairs of uniform random numbers
+  u1 <- runif(n / 2)
+  u2 <- runif(n / 2)
+  
+  # Box-Muller transform
+  z1 <- sqrt(-2 * log(u1)) * cos(2 * pi * u2)
+  z2 <- sqrt(-2 * log(u1)) * sin(2 * pi * u2)
+  
+  # Combine the two sets of normal deviates
+  z <- c(z1, z2)
+  return(z)
+}
+
+generate_chi_squared <- function(n, df) {
+  # Generate df sets of n standard normal deviates
+  normals <- matrix(generate_normal(n * df), nrow = n, ncol = df)
+  
+  # Compute the sum of squares across columns for chi-squared deviates
+  chi_sq <- rowSums(normals^2)
+  return(chi_sq)
+}
+
+generate_t_dist <- function(n, df) {
+  # Generate n standard normal deviates
+  Z <- generate_normal(n)
+  
+  # Generate n chi-squared deviates with df degrees of freedom
+  V <- generate_chi_squared(n, df)
+  
+  # Compute the t-distributed random numbers
+  T <- Z / sqrt(V / df)
+  
+  return(T)
+}
+
+# Example usage
+set.seed(123) # For reproducibility
+t_samples <- generate_t_dist(1000, 10) # Generate 1000 samples
+hist(t_samples, breaks=40, main="Histogram of samples from Student's t-distribution")
 
 ```
 
@@ -156,6 +202,36 @@ data_sample <- generate_t_distribution(100, 5)  # Example data generation
 # Estimate degrees of freedom using MLE
 estimated_v <- mle_t_distribution(data_sample)
 print(estimated_v)
+```
+
+```{r}
+# Log-Likelihood function for the Student's t-distribution
+log_likelihood <- function(v, data) {
+  n <- length(data)
+  log_likelihood <- sum(stats::dt(data, df=v, log=TRUE))
+  return(-log_likelihood)  # Return negative because 'optim' minimizes
+}
+
+# MLE Estimator for degrees of freedom of Student's t-distribution
+mle_student_t <- function(data) {
+  # Initial guess for degrees of freedom
+  start_v <- 10
+  
+  # Optimize the log-likelihood function
+  mle <- optim(par = start_v, fn = log_likelihood, data = data, method = "L-BFGS-B", lower = 2.01, upper = 100)
+  
+  # Return the estimated degrees of freedom
+  return(mle$par)
+}
+
+# Example usage with simulated data
+set.seed(123)
+# Generate some data from a Student's t-distribution with 5 degrees of freedom
+data <- rt(100, df = 5)
+
+# Estimate the degrees of freedom
+estimated_df <- mle_student_t(data)
+estimated_df
 
 ```
 
@@ -236,13 +312,11 @@ df2 <- Output %>% group_by(n) %>%
 df2
 ```
 
-
 ```{r}
 ggplot(data=Output, aes(x=n, y=ML, group=1)) +
   geom_line()+
   geom_point()
 ```
-
 
 ```{r}
 ggplot(Output.melt, aes(x=Estimates, col=Estimator)) +
