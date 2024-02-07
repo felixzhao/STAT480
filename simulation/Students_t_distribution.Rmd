@@ -235,6 +235,63 @@ estimated_df
 
 ```
 
+```{r}
+
+# log likelihood from scartch
+
+log_likelihood_v <- function(v, data) {
+  if(v <= 0) return(Inf) # Ensure v is positive
+  n <- length(data)
+  mu <- 0 # Assuming mean is 0
+  sigma <- 1 # Assuming standard deviation is 1
+  gamma_part <- lgamma((v + 1) / 2) - lgamma(v / 2) - 0.5*log(v*pi) - log(sigma)
+  summand <- -(v + 1) / 2 * log(1 + (data - mu)^2 / (v * sigma^2))
+  log_likelihood <- sum(gamma_part + summand)
+  return(-log_likelihood) # Return negative for minimization
+}
+
+# Use optim to find the MLE of v
+find_mle_v <- function(data) {
+  result <- optim(par = 5, fn = log_likelihood_v, data = data, method = "L-BFGS-B", lower = 0.001, upper = 100)
+  return(result$par)
+}
+
+# Example usage
+set.seed(123)
+data <- rt(n = 100, df = 5) # Simulated data for testing
+mle_v <- find_mle_v(data)
+mle_v
+
+```
+
+```{r}
+# log likelihood from scartch
+# sample use my generated
+
+log_likelihood_v <- function(v, data) {
+  if(v <= 0) return(Inf) # Ensure v is positive
+  n <- length(data)
+  mu <- 0 # Assuming mean is 0
+  sigma <- 1 # Assuming standard deviation is 1
+  gamma_part <- lgamma((v + 1) / 2) - lgamma(v / 2) - 0.5*log(v*pi) - log(sigma)
+  summand <- -(v + 1) / 2 * log(1 + (data - mu)^2 / (v * sigma^2))
+  log_likelihood <- sum(gamma_part + summand)
+  return(-log_likelihood) # Return negative for minimization
+}
+
+# Use optim to find the MLE of v
+find_mle_v <- function(data) {
+  result <- optim(par = 5, fn = log_likelihood_v, data = data, method = "L-BFGS-B", lower = 0.001, upper = 100)
+  return(result$par)
+}
+
+# Example usage
+set.seed(123)
+# data <- rt(n = 100, df = 5) # Simulated data for testing
+mle_v <- find_mle_v(t_samples)
+mle_v
+```
+
 # Improve by Bootstrap
 
 ```{r}
@@ -260,7 +317,49 @@ bootstrap_mle_t_distribution <- function(original_data, n_bootstrap = 1000) {
 # Example usage
 data_sample <- generate_t_distribution(100, 5)  # Generate sample data
 result <- bootstrap_mle_t_distribution(data_sample)
-print(result$estimate)
+print(res
+```
+
+```{r}
+
+# bootstrap impove for
+# log likelihood from scartch
+# sample use my generated
+
+bootstrap_mle <- function(data, n_bootstrap = 1000) {
+  # Initialize a vector to store bootstrap MLE estimates
+  bootstrap_estimates <- numeric(n_bootstrap)
+  
+  # Perform bootstrap
+  for (i in 1:n_bootstrap) {
+    # Sample with replacement
+    bootstrap_sample <- sample(data, size = length(data), replace = TRUE)
+    # Estimate parameter(s) using MLE on the bootstrap sample
+    bootstrap_estimates[i] <- find_mle_v(bootstrap_sample)
+  }
+  
+  # Calculate the mean of the bootstrap estimates
+  mean_estimate <- mean(bootstrap_estimates)
+  # Calculate the standard error of the bootstrap estimates
+  std_error <- sd(bootstrap_estimates)
+  
+  # Optionally calculate confidence intervals, e.g., 95% CI
+  ci_lower <- quantile(bootstrap_estimates, probs = 0.025)
+  ci_upper <- quantile(bootstrap_estimates, probs = 0.975)
+  
+  # Return a list with the bootstrap results
+  return(list(mean_estimate = mean_estimate, std_error = std_error, ci_lower = ci_lower, ci_upper = ci_upper))
+}
+
+# Example usage
+set.seed(123)
+data <- rt(n = 100, df = 5) # Simulated data for testing
+bootstrap_results <- bootstrap_mle(data)
+print(bootstrap_results)
+
+```
+
+```{ult$estimate)}
 
 ```
 
