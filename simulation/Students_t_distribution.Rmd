@@ -363,7 +363,103 @@ print(bootstrap_results)
 
 ```
 
-# estimate sample
+# Study t
+
+```{r}
+# Assuming find_mle_v(data) and bootstrap_mle(data, n_bootstrap) are defined as before
+
+# Function to simulate and calculate bias and MSE
+simulate_study <- function(v_true, sample_sizes, n_simulations = 100, n_bootstrap = 500) {
+  results <- expand.grid(sample_size = sample_sizes, sim = 1:n_simulations)
+  results$mle_v <- NA
+  results$bootstrap_mean_v <- NA
+  
+  for (i in 1:nrow(results)) {
+    # Generate data
+    data <- rt(n = results$sample_size[i], df = v_true)
+    
+    # MLE estimation
+    mle_v <- find_mle_v(data)
+    results$mle_v[i] <- mle_v
+    
+    # Bootstrap estimation
+    bootstrap_res <- bootstrap_mle(data, n_bootstrap)
+    results$bootstrap_mean_v[i] <- bootstrap_res$mean_estimate
+  }
+  
+  # Calculate bias and MSE for MLE and Bootstrap
+  results$mle_bias <- results$mle_v - v_true
+  results$bootstrap_bias <- results$bootstrap_mean_v - v_true
+  results$mle_mse <- results$mle_bias^2
+  results$bootstrap_mse <- results$bootstrap_bias^2
+  
+  # Aggregate results
+  summary <- aggregate(cbind(mle_bias, bootstrap_bias, mle_mse, bootstrap_mse) ~ sample_size, data = results, mean)
+  
+  return(summary)
+}
+
+# Example usage
+sample_sizes <- c(30, 100, 500)
+v_true <- 5
+study_results <- simulate_study(v_true, sample_sizes)
+print(study_results)
+
+```
+
+# he Bias and MSE 
+
+```{r}
+library(parallel) # For parallel computation
+
+# Assuming `find_mle_v(data)` is your function for estimating degrees of freedom using MLE
+# Assuming `bootstrap_mle(data, n_bootstrap = 1000)` is your function for bootstrap estimation
+
+# Function to simulate study for a single scenario
+simulate_study <- function(n, v_true, n_bootstrap = 1000) {
+  # Generate data from Student's t-distribution
+  data <- rt(n = n, df = v_true)
+  
+  # Apply MLE to estimate v
+  mle_estimate <- find_mle_v(data)
+  
+  # Apply Bootstrap to estimate v
+  bootstrap_result <- bootstrap_mle(data, n_bootstrap)
+  bootstrap_estimate <- bootstrap_result$mean_estimate
+  
+  # Calculate bias and MSE for MLE and Bootstrap
+  bias_mle <- mle_estimate - v_true
+  mse_mle <- bias_mle^2
+  
+  bias_bootstrap <- bootstrap_estimate - v_true
+  mse_bootstrap <- bias_bootstrap^2
+  
+  # Return results
+  list(n = n, v_true = v_true, bias_mle = bias_mle, mse_mle = mse_mle, 
+       bias_bootstrap = bias_bootstrap, mse_bootstrap = mse_bootstrap)
+}
+
+# Scenarios to study: combinations of sample sizes and degrees of freedom
+sample_sizes <- c(30, 100, 500)
+df_values <- c(5, 10, 20)
+
+# Perform study across all scenarios
+results <- expand.grid(n = sample_sizes, v_true = df_values)
+study_results <- mclapply(1:nrow(results), function(i) {
+  simulate_study(results$n[i], results$v_true[i])
+}, mc.cores = detectCores() - 1)
+
+# Convert results to a dataframe for easier analysis
+study_results_df <- do.call(rbind, lapply(study_results, function(x) data.frame(x)))
+
+# Analyze the results
+print(study_results_df)
+
+```
+
+```{r}
+
+```
 
 ```{r}
 library(reshape2)
