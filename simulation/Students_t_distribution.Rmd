@@ -2,6 +2,7 @@
 title: "STAT480-Simulation"
 author: "Quan Zhao"
 date: "2023-12-19"
+bibliography: references.bib
 output: pdf_document
 ---
 
@@ -17,7 +18,9 @@ library(ggplot2)
 
 # Introduce
 
-The Student's t-distribution is a fundamental statistical probability distribution, essential for estimating the means of small sample sizes when the population standard deviation is unknown. Developed by William Sealy Gosset under the pseudonym "Student," this distribution distinguishes itself with heavier tails than the normal distribution. This key feature allows it to accommodate the increased variability found in smaller samples, making it particularly effective for data sets with fewer observations.
+The Student's t-distribution was first introduced by William Sealy Gosset in 1908, under the pseudonym 'Student,' in a paper published with the identifier @student1908probable. Ronald Aylmer Fisher and others, referenced with @fisher1925043, discussed the application of the Student's distribution in 1925. Similarly, Mohammad Ahsanullah and colleagues, cited as @ahsanullah2014normal, explored its application in 2014.
+
+The Student's t-distribution is a fundamental statistical probability distribution essential for estimating the means of small sample sizes when the population standard deviation is unknown. Developed by William Sealy Gosset under the pseudonym "Student," this distribution distinguishes itself with heavier tails than the normal distribution. This key feature allows it to accommodate the increased variability found in smaller samples, making it particularly effective for data sets with fewer observations.
 
 Its applications extend across hypothesis testing and confidence interval estimation, where the t-distribution is crucial for performing t-tests to compare means accurately, despite limited data availability. This makes the t-distribution a cornerstone in fields such as psychology, economics, and any discipline requiring precise decision-making based on small data sets.
 
@@ -48,7 +51,6 @@ student_t_cdf <- function(t, nu) {
   integrate(function(x) student_t_pdf(x, nu), lower = -Inf, upper = t)$value
 }
 
-# Example usage
 nu <- 5 # degrees of freedom
 t_value <- 2
 
@@ -69,9 +71,6 @@ print(paste("CDF at t =", t_value, ":", cdf_value))
 Set Degree of freedom as 10
 
 ```{r}
-# Load necessary library
-library(ggplot2)
-
 # Set degrees of freedom
 nu <- 10
 
@@ -112,6 +111,7 @@ plot_dist(nu)
 When the Degree of freedom is 1, then Student's t-distribution is standard Cauchy distribution.
 
 ```{r}
+# Set degrees of freedom
 nu <- 1
 plot_dist(nu)
 ```
@@ -165,8 +165,8 @@ hist(t_samples, breaks=40, main="Histogram of samples from Student's t-distribut
 # Given $X = (X_{1},X_{2}, ...,X_{n})$ a random sample of i.i.d. Student's t variables
 
 ```{r}
-# log likelihood from scartch
-# sample use my generated
+# log likelihood from scratch
+# data use my generated
 
 log_likelihood_v <- function(v, data) {
   if(v <= 0) return(Inf) # Ensure v is positive
@@ -185,9 +185,7 @@ find_mle_v <- function(data) {
   return(result$par)
 }
 
-# Example usage
-set.seed(123)
-# data <- rt(n = 100, df = 5) # Simulated data for testing
+
 mle_v <- find_mle_v(t_samples)
 mle_v
 ```
@@ -197,8 +195,8 @@ mle_v
 ```{r}
 
 # bootstrap impove for
-# log likelihood from scartch
-# sample use my generated
+# log likelihood from scratch
+# data use my generated
 
 bootstrap_mle <- function(data, n_bootstrap = 1000) {
   # Initialize a vector to store bootstrap MLE estimates
@@ -225,10 +223,7 @@ bootstrap_mle <- function(data, n_bootstrap = 1000) {
   return(list(mean_estimate = mean_estimate, std_error = std_error, ci_lower = ci_lower, ci_upper = ci_upper))
 }
 
-# Example usage
-set.seed(123)
-data <- rt(n = 100, df = 5) # Simulated data for testing
-bootstrap_results <- bootstrap_mle(data)
+bootstrap_results <- bootstrap_mle(t_samples)
 print(bootstrap_results)
 
 ```
@@ -237,9 +232,6 @@ print(bootstrap_results)
 
 ```{r}
 library(parallel) # For parallel computation
-
-# Assuming `find_mle_v(data)` is your function for estimating degrees of freedom using MLE
-# Assuming `bootstrap_mle(data, n_bootstrap = 1000)` is your function for bootstrap estimation
 
 # Function to simulate study for a single scenario
 simulate_study <- function(n, v_true, n_bootstrap = 1000) {
@@ -320,11 +312,6 @@ ggplot(bias_data, aes(x = n, y = Value, colour = Estimation_Method)) +
 Fix sample size as 300, select Parameter V
 
 ```{r}
-library(parallel) # For parallel computation
-
-# Assuming `find_mle_v(data)` is your function for estimating degrees of freedom using MLE
-# Assuming `bootstrap_mle(data, n_bootstrap = 1000)` is your function for bootstrap estimation
-
 # Function to simulate study for a single scenario
 simulate_study <- function(n, v_true, n_bootstrap = 1000) {
   # Generate data from Student's t-distribution
@@ -415,3 +402,6 @@ Based on the plots, we found that Bootstrap performs very well when the sample s
 # Conclusion
 
 We initiated our study by generating Student's t-distributions from scratch, which served as the foundation for our Maximum Likelihood Estimation (MLE) analysis. Subsequently, we employed bootstrap methods to refine our MLE estimates. Our findings underscore the significance of selecting suitable Degrees of Freedom (DF) and sample sizes. Specifically, a sample size of 300 with the DF set at 10 was identified as providing an optimal equilibrium between Mean Squared Error (MSE) and Bias. Our comparative analysis of MLE and Bootstrap approaches further indicated that while Bootstrap holds benefits for smaller sample sizes due to performance comparable to MLE, its greater computational demand renders it less favorable for larger datasets. Therefore, MLE stands out as the more viable option for substantial data collections, highlighting the necessity of choosing the appropriate statistical method based on the size of the dataset and computational resources.
+
+
+# Reference
