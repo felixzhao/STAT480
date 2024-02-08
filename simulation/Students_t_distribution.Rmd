@@ -11,7 +11,15 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 set.seed(123)
+
+library(ggplot2)
 ```
+
+# Introduce
+
+The Student's t-distribution is a fundamental statistical probability distribution, essential for estimating the means of small sample sizes when the population standard deviation is unknown. Developed by William Sealy Gosset under the pseudonym "Student," this distribution distinguishes itself with heavier tails than the normal distribution. This key feature allows it to accommodate the increased variability found in smaller samples, making it particularly effective for data sets with fewer observations.
+
+Its applications extend across hypothesis testing and confidence interval estimation, where the t-distribution is crucial for performing t-tests to compare means accurately, despite limited data availability. This makes the t-distribution a cornerstone in fields such as psychology, economics, and any discipline requiring precise decision-making based on small data sets.
 
 ## PDF and CDF of dist
 
@@ -26,6 +34,8 @@ CDF of student's t-distribution
 $$
 F(t) = \int_{-\infty}^{t} f(u)\, du
 $$
+
+## Implement Student's PDF and CDF funcitons
 
 ```{r}
 # Student's t PDF
@@ -54,14 +64,16 @@ print(paste("CDF at t =", t_value, ":", cdf_value))
 
 ```
 
-# Plot examples of the density; display the parameters that you chose.
+# Plot examples of the density; display the parameters that my chose.
+
+Set Degree of freedom as 10
 
 ```{r}
 # Load necessary library
 library(ggplot2)
 
 # Set degrees of freedom
-nu <- 5
+nu <- 10
 
 plot_dist <- function(nu) {
 
@@ -109,20 +121,20 @@ plot_dist(nu)
 ```{r}
 # this not use runif only, thus ignore it
 
-generate_t_distribution <- function(n, nu) {
-  Z <- rnorm(n)
-  X <- rchisq(n, df = nu)
-  T <- Z / sqrt(X / nu)
-  return(T)
-}
-
-# Example usage
-n <- 1000    # number of random values to generate
-nu <- 5      # degrees of freedom
-t_values <- generate_t_distribution(n, nu)
-
-# You can plot to see the distribution
-hist(t_values, breaks = 30, main = "Generated Student's t-Distribution", xlab = "T-values")
+# generate_t_distribution <- function(n, nu) {
+#   Z <- rnorm(n)
+#   X <- rchisq(n, df = nu)
+#   T <- Z / sqrt(X / nu)
+#   return(T)
+# }
+# 
+# # Example usage
+# n <- 1000    # number of random values to generate
+# nu <- 5      # degrees of freedom
+# t_values <- generate_t_distribution(n, nu)
+# 
+# # You can plot to see the distribution
+# hist(t_values, breaks = 30, main = "Generated Student's t-Distribution", xlab = "T-values")
 
 ```
 
@@ -175,92 +187,92 @@ hist(t_samples, breaks=40, main="Histogram of samples from Student's t-distribut
 ## obtain your own ***maximum likelihood estimator*** for (a,b), say $\widehat{(a,b)}_{ML}$. Implement it.
 
 ```{r}
-# Student's t PDF function
-student_t_pdf <- function(t, nu) {
-  gamma((nu + 1) / 2) / (sqrt(nu * pi) * gamma(nu / 2)) * (1 + (t^2) / nu)^(-(nu + 1) / 2)
-}
-
-# Log-Likelihood function using the custom Student's t PDF
-log_likelihood_t <- function(v, data) {
-  sum(log(sapply(data, student_t_pdf, nu = v)))
-}
-
-# Function to find MLE of degrees of freedom (v)
-mle_t_distribution <- function(data) {
-  # Ensure data does not contain non-finite values
-  data <- data[is.finite(data)]
-  
-  # Optim function with bounds for v and adjusted initial value
-  mle <- optim(par = 4, fn = function(v) -log_likelihood_t(v, data), 
-               method = "L-BFGS-B", lower = 2, upper = 30, control = list(fnscale = -1))
-  return(mle$par)
-}
-
-# Generate random data using the custom Student's t distribution function
-data_sample <- generate_t_distribution(100, 5)  # Example data generation
-
-# Estimate degrees of freedom using MLE
-estimated_v <- mle_t_distribution(data_sample)
-print(estimated_v)
+# # Student's t PDF function
+# student_t_pdf <- function(t, nu) {
+#   gamma((nu + 1) / 2) / (sqrt(nu * pi) * gamma(nu / 2)) * (1 + (t^2) / nu)^(-(nu + 1) / 2)
+# }
+# 
+# # Log-Likelihood function using the custom Student's t PDF
+# log_likelihood_t <- function(v, data) {
+#   sum(log(sapply(data, student_t_pdf, nu = v)))
+# }
+# 
+# # Function to find MLE of degrees of freedom (v)
+# mle_t_distribution <- function(data) {
+#   # Ensure data does not contain non-finite values
+#   data <- data[is.finite(data)]
+#   
+#   # Optim function with bounds for v and adjusted initial value
+#   mle <- optim(par = 4, fn = function(v) -log_likelihood_t(v, data), 
+#                method = "L-BFGS-B", lower = 2, upper = 30, control = list(fnscale = -1))
+#   return(mle$par)
+# }
+# 
+# # Generate random data using the custom Student's t distribution function
+# data_sample <- generate_t_distribution(100, 5)  # Example data generation
+# 
+# # Estimate degrees of freedom using MLE
+# estimated_v <- mle_t_distribution(data_sample)
+# print(estimated_v)
 ```
 
 ```{r}
-# Log-Likelihood function for the Student's t-distribution
-log_likelihood <- function(v, data) {
-  n <- length(data)
-  log_likelihood <- sum(stats::dt(data, df=v, log=TRUE))
-  return(-log_likelihood)  # Return negative because 'optim' minimizes
-}
-
-# MLE Estimator for degrees of freedom of Student's t-distribution
-mle_student_t <- function(data) {
-  # Initial guess for degrees of freedom
-  start_v <- 10
-  
-  # Optimize the log-likelihood function
-  mle <- optim(par = start_v, fn = log_likelihood, data = data, method = "L-BFGS-B", lower = 2.01, upper = 100)
-  
-  # Return the estimated degrees of freedom
-  return(mle$par)
-}
-
-# Example usage with simulated data
-set.seed(123)
-# Generate some data from a Student's t-distribution with 5 degrees of freedom
-data <- rt(100, df = 5)
-
-# Estimate the degrees of freedom
-estimated_df <- mle_student_t(data)
-estimated_df
+# # Log-Likelihood function for the Student's t-distribution
+# log_likelihood <- function(v, data) {
+#   n <- length(data)
+#   log_likelihood <- sum(stats::dt(data, df=v, log=TRUE))
+#   return(-log_likelihood)  # Return negative because 'optim' minimizes
+# }
+# 
+# # MLE Estimator for degrees of freedom of Student's t-distribution
+# mle_student_t <- function(data) {
+#   # Initial guess for degrees of freedom
+#   start_v <- 10
+#   
+#   # Optimize the log-likelihood function
+#   mle <- optim(par = start_v, fn = log_likelihood, data = data, method = "L-BFGS-B", lower = 2.01, upper = 100)
+#   
+#   # Return the estimated degrees of freedom
+#   return(mle$par)
+# }
+# 
+# # Example usage with simulated data
+# set.seed(123)
+# # Generate some data from a Student's t-distribution with 5 degrees of freedom
+# data <- rt(100, df = 5)
+# 
+# # Estimate the degrees of freedom
+# estimated_df <- mle_student_t(data)
+# estimated_df
 
 ```
 
 ```{r}
 
-# log likelihood from scartch
-
-log_likelihood_v <- function(v, data) {
-  if(v <= 0) return(Inf) # Ensure v is positive
-  n <- length(data)
-  mu <- 0 # Assuming mean is 0
-  sigma <- 1 # Assuming standard deviation is 1
-  gamma_part <- lgamma((v + 1) / 2) - lgamma(v / 2) - 0.5*log(v*pi) - log(sigma)
-  summand <- -(v + 1) / 2 * log(1 + (data - mu)^2 / (v * sigma^2))
-  log_likelihood <- sum(gamma_part + summand)
-  return(-log_likelihood) # Return negative for minimization
-}
-
-# Use optim to find the MLE of v
-find_mle_v <- function(data) {
-  result <- optim(par = 5, fn = log_likelihood_v, data = data, method = "L-BFGS-B", lower = 0.001, upper = 100)
-  return(result$par)
-}
-
-# Example usage
-set.seed(123)
-data <- rt(n = 100, df = 5) # Simulated data for testing
-mle_v <- find_mle_v(data)
-mle_v
+# # log likelihood from scartch
+# 
+# log_likelihood_v <- function(v, data) {
+#   if(v <= 0) return(Inf) # Ensure v is positive
+#   n <- length(data)
+#   mu <- 0 # Assuming mean is 0
+#   sigma <- 1 # Assuming standard deviation is 1
+#   gamma_part <- lgamma((v + 1) / 2) - lgamma(v / 2) - 0.5*log(v*pi) - log(sigma)
+#   summand <- -(v + 1) / 2 * log(1 + (data - mu)^2 / (v * sigma^2))
+#   log_likelihood <- sum(gamma_part + summand)
+#   return(-log_likelihood) # Return negative for minimization
+# }
+# 
+# # Use optim to find the MLE of v
+# find_mle_v <- function(data) {
+#   result <- optim(par = 5, fn = log_likelihood_v, data = data, method = "L-BFGS-B", lower = 0.001, upper = 100)
+#   return(result$par)
+# }
+# 
+# # Example usage
+# set.seed(123)
+# data <- rt(n = 100, df = 5) # Simulated data for testing
+# mle_v <- find_mle_v(data)
+# mle_v
 
 ```
 
@@ -295,29 +307,29 @@ mle_v
 # Improve by Bootstrap
 
 ```{r}
-# Bootstrap-enhanced MLE function
-bootstrap_mle_t_distribution <- function(original_data, n_bootstrap = 1000) {
-  bootstrap_estimates <- numeric(n_bootstrap)
-
-  for (i in 1:n_bootstrap) {
-    # Create a bootstrap sample
-    bootstrap_sample <- sample(original_data, size = length(original_data), replace = TRUE)
-
-    # Estimate v using MLE for the bootstrap sample
-    estimated_v <- optim(par = 4, fn = function(v) -log_likelihood_t(v, bootstrap_sample), 
-                         method = "L-BFGS-B", lower = 2, upper = 30, control = list(fnscale = -1))$par
-    bootstrap_estimates[i] <- estimated_v
-  }
-
-  # Aggregate results: mean or median can be used
-  final_estimate <- mean(bootstrap_estimates)
-  return(list(estimate = final_estimate, bootstrap_estimates = bootstrap_estimates))
-}
-
-# Example usage
-data_sample <- generate_t_distribution(100, 5)  # Generate sample data
-result <- bootstrap_mle_t_distribution(data_sample)
-print(res
+# # Bootstrap-enhanced MLE function
+# bootstrap_mle_t_distribution <- function(original_data, n_bootstrap = 1000) {
+#   bootstrap_estimates <- numeric(n_bootstrap)
+# 
+#   for (i in 1:n_bootstrap) {
+#     # Create a bootstrap sample
+#     bootstrap_sample <- sample(original_data, size = length(original_data), replace = TRUE)
+# 
+#     # Estimate v using MLE for the bootstrap sample
+#     estimated_v <- optim(par = 4, fn = function(v) -log_likelihood_t(v, bootstrap_sample), 
+#                          method = "L-BFGS-B", lower = 2, upper = 30, control = list(fnscale = -1))$par
+#     bootstrap_estimates[i] <- estimated_v
+#   }
+# 
+#   # Aggregate results: mean or median can be used
+#   final_estimate <- mean(bootstrap_estimates)
+#   return(list(estimate = final_estimate, bootstrap_estimates = bootstrap_estimates))
+# }
+# 
+# # Example usage
+# data_sample <- generate_t_distribution(100, 5)  # Generate sample data
+# result <- bootstrap_mle_t_distribution(data_sample)
+# print(result)
 ```
 
 ```{r}
@@ -359,82 +371,76 @@ print(bootstrap_results)
 
 ```
 
-```{ult$estimate)}
-
-```
-
-# Study t
+# Study the Bias and MSE
 
 ```{r}
-# Assuming find_mle_v(data) and bootstrap_mle(data, n_bootstrap) are defined as before
-
-# Function to simulate and calculate bias and MSE
-simulate_study <- function(v_true, sample_sizes, n_simulations = 100, n_bootstrap = 500) {
-  results <- expand.grid(sample_size = sample_sizes, sim = 1:n_simulations)
-  results$mle_v <- NA
-  results$bootstrap_mean_v <- NA
-  
-  for (i in 1:nrow(results)) {
-    # Generate data
-    data <- rt(n = results$sample_size[i], df = v_true)
-    
-    # MLE estimation
-    mle_v <- find_mle_v(data)
-    results$mle_v[i] <- mle_v
-    
-    # Bootstrap estimation
-    bootstrap_res <- bootstrap_mle(data, n_bootstrap)
-    results$bootstrap_mean_v[i] <- bootstrap_res$mean_estimate
-  }
-  
-  # Calculate bias and MSE for MLE and Bootstrap
-  results$mle_bias <- results$mle_v - v_true
-  results$bootstrap_bias <- results$bootstrap_mean_v - v_true
-  results$mle_mse <- results$mle_bias^2
-  results$bootstrap_mse <- results$bootstrap_bias^2
-  
-  # Aggregate results
-  summary <- aggregate(cbind(mle_bias, bootstrap_bias, mle_mse, bootstrap_mse) ~ sample_size, data = results, mean)
-  
-  return(summary)
-}
-
-# Example usage
-sample_sizes <- c(30, 50, 100, 200, 300, 500)
-v_true <- 5
-study_results <- simulate_study(v_true, sample_sizes)
-print(study_results)
+# # Assuming find_mle_v(data) and bootstrap_mle(data, n_bootstrap) are defined as before
+# 
+# # Function to simulate and calculate bias and MSE
+# simulate_study <- function(v_true, sample_sizes, n_simulations = 100, n_bootstrap = 500) {
+#   results <- expand.grid(sample_size = sample_sizes, sim = 1:n_simulations)
+#   results$mle_v <- NA
+#   results$bootstrap_mean_v <- NA
+#   
+#   for (i in 1:nrow(results)) {
+#     # Generate data
+#     data <- rt(n = results$sample_size[i], df = v_true)
+#     
+#     # MLE estimation
+#     mle_v <- find_mle_v(data)
+#     results$mle_v[i] <- mle_v
+#     
+#     # Bootstrap estimation
+#     bootstrap_res <- bootstrap_mle(data, n_bootstrap)
+#     results$bootstrap_mean_v[i] <- bootstrap_res$mean_estimate
+#   }
+#   
+#   # Calculate bias and MSE for MLE and Bootstrap
+#   results$mle_bias <- results$mle_v - v_true
+#   results$bootstrap_bias <- results$bootstrap_mean_v - v_true
+#   results$mle_mse <- results$mle_bias^2
+#   results$bootstrap_mse <- results$bootstrap_bias^2
+#   
+#   # Aggregate results
+#   summary <- aggregate(cbind(mle_bias, bootstrap_bias, mle_mse, bootstrap_mse) ~ sample_size, data = results, mean)
+#   
+#   return(summary)
+# }
+# 
+# # Example usage
+# sample_sizes <- c(30, 50, 100, 200, 300, 500)
+# v_true <- 5
+# study_results <- simulate_study(v_true, sample_sizes)
+# print(study_results)
 
 ```
 
 ```{r}
-library(ggplot2)
-
-# Assuming study_results is the output from the simulate_study function
-
-# Plot for MSE
-ggplot(study_results, aes(x = sample_size)) +
-  geom_line(aes(y = mle_mse, colour = "MLE")) +
-  geom_line(aes(y = bootstrap_mse, colour = "Bootstrap")) +
-  labs(title = "MSE of MLE and Bootstrap Estimates",
-       x = "Sample Size",
-       y = "MSE",
-       colour = "Estimation Method") +
-  theme_minimal()
-
-# Plot for Bias
-ggplot(study_results, aes(x = sample_size)) +
-  geom_line(aes(y = mle_bias, colour = "MLE")) +
-  geom_line(aes(y = bootstrap_bias, colour = "Bootstrap")) +
-  labs(title = "Bias of MLE and Bootstrap Estimates",
-       x = "Sample Size",
-       y = "Bias",
-       colour = "Estimation Method") +
-  theme_minimal()
+# library(ggplot2)
+# 
+# # Assuming study_results is the output from the simulate_study function
+# 
+# # Plot for MSE
+# ggplot(study_results, aes(x = sample_size)) +
+#   geom_line(aes(y = mle_mse, colour = "MLE")) +
+#   geom_line(aes(y = bootstrap_mse, colour = "Bootstrap")) +
+#   labs(title = "MSE of MLE and Bootstrap Estimates",
+#        x = "Sample Size",
+#        y = "MSE",
+#        colour = "Estimation Method") +
+#   theme_minimal()
+# 
+# # Plot for Bias
+# ggplot(study_results, aes(x = sample_size)) +
+#   geom_line(aes(y = mle_bias, colour = "MLE")) +
+#   geom_line(aes(y = bootstrap_bias, colour = "Bootstrap")) +
+#   labs(title = "Bias of MLE and Bootstrap Estimates",
+#        x = "Sample Size",
+#        y = "Bias",
+#        colour = "Estimation Method") +
+#   theme_minimal()
 
 ```
-
-# he Bias and MSE 
 
 ```{r}
 library(parallel) # For parallel computation
@@ -467,8 +473,8 @@ simulate_study <- function(n, v_true, n_bootstrap = 1000) {
 }
 
 # Scenarios to study: combinations of sample sizes and degrees of freedom
-sample_sizes <- c(30, 50, 100, 150, 200, 250, 300, 500)
-df_values <- c(5)
+sample_sizes <- c(30, 50, 300, 1000, 2000)
+df_values <- c(10)
 
 # Perform study across all scenarios
 results <- expand.grid(n = sample_sizes, v_true = df_values)
@@ -480,12 +486,9 @@ study_results <- mclapply(1:nrow(results), function(i) {
 study_results_df <- do.call(rbind, lapply(study_results, function(x) data.frame(x)))
 
 # Analyze the results
-print(study_results_df)
+# print(study_results_df)
 
-```
-
-```{r}
-library(ggplot2)
+# plot
 
 # Convert 'study_results_df' to a long format for easier plotting with ggplot2
 study_results_long <- tidyr::pivot_longer(study_results_df, 
@@ -518,7 +521,6 @@ ggplot(bias_data, aes(x = n, y = Value, colour = Estimation_Method)) +
        y = "Bias",
        colour = "Estimation Method") +
   theme_minimal()
-
 
 ```
 
@@ -556,7 +558,7 @@ simulate_study <- function(n, v_true, n_bootstrap = 1000) {
 
 # Scenarios to study: combinations of sample sizes and degrees of freedom
 sample_sizes <- c(300)
-df_values <- c(1, 3, 5, 7, 9, 50, 100)
+df_values <- c(1, 3, 5, 7, 10, 50, 100)
 
 # Perform study across all scenarios
 results <- expand.grid(n = sample_sizes, v_true = df_values)
@@ -565,17 +567,15 @@ study_results <- mclapply(1:nrow(results), function(i) {
 }, mc.cores = detectCores() - 1)
 
 # Convert results to a dataframe for easier analysis
-study_results_df <- do.call(rbind, lapply(study_results, function(x) data.frame(x)))
+study_results_fix_sample_size_df <- do.call(rbind, lapply(study_results, function(x) data.frame(x)))
 
 # Analyze the results
-print(study_results_df)
-```
+print(study_results_fix_sample_size_df)
 
-```{r}
-library(ggplot2)
+# plot
 
 # Convert 'study_results_df' to a long format for easier plotting with ggplot2
-study_results_long <- tidyr::pivot_longer(study_results_df, 
+study_results_long <- tidyr::pivot_longer(study_results_fix_sample_size_df, 
                                           cols = c(mse_mle, mse_bootstrap, bias_mle, bias_bootstrap),
                                           names_to = "Estimation_Method", 
                                           values_to = "Value")
@@ -607,70 +607,18 @@ ggplot(bias_data, aes(x = v_true, y = Value, colour = Estimation_Method)) +
   theme_minimal()
 ```
 
-```{r}
-Output
-```
+# Experiments
 
-```{r}
-df2 <- Output %>% group_by(n) %>% 
-  summarise(ML=mean(ML),
-            Med= mean(Med),
-            .groups = 'drop') %>%
-  as.data.frame()
+In the experiments, we first fix the Degree of Freedom (DF) at 10 to select the best sample size. Based on the plot of Mean Squared Error (MSE) and Bias, a sample size of 300 gives us the elbow point.
 
-df2
-```
+Then, we fix the sample size at 300 to select the best DF. From the MSE and Bias plot, we found that a DF around 10 indicates the elbow point.
 
-```{r}
-ggplot(data=Output, aes(x=n, y=ML, group=1)) +
-  geom_line()+
-  geom_point()
-```
+# Analysis
 
-```{r}
-ggplot(Output.melt, aes(x=Estimates, col=Estimator)) +
-  geom_vline(xintercept = 1, col="gray") +
-  geom_density(linewidth=1.2) +
-  ylab("Empirical densities") +
-  facet_wrap(~n)
-```
+# Comparing MSE and Bias for MLE and Bootstrap
 
-```{r}
-ggplot(Output.melt, 
-       aes(x=n, y=Estimates, fill=Estimator)) +
-  geom_hline(yintercept=1, col="gray") +
-  geom_boxplot(notch=TRUE) +
-  xlab(expression(italic(n)))
-```
+Based on the plots, we found that Bootstrap performs very well when the sample size is small. It shows similar performance when the sample size becomes larger. However, because it costs more than the Maximum Likelihood Estimation (MLE) method, there is no advantage to using it when we have sufficient data samples.
 
-```{r}
-bootstrap.median <- function(x, B){
-  sample_size <- length(x)
-  t <- median(x)/log(2)
-  
-  if(sample_size^sample_size<B) {
-        m.Bootstrap <- permutations(n=sample_size, 
-                                    r=sample_size, 
-                                    v=x, 
-                                    repeats.allowed=FALSE)
-        return(2*t - mean(unlist(lapply(m.Bootstrap, median))))
-  } else {
-    v.Bootstrap <- rep(0, B)
-    for(b in 1:B) {
-      bx <- sample(x, replace = TRUE)
-      v.Bootstrap[b] <- median(bx) / log(2)
-    }
-      return(2*t - mean(v.Bootstrap))
-  }
-}
-```
+# Conclusion
 
-```{r}
-ggplot(summary.information, 
-       aes(x=n, y=mean, colour=Estimator, group=Estimator)) + 
-  geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=.1) +
-  geom_line() +
-  geom_point(size=3, shape=21, fill="white") +
-  xlab(expression(italic(n))) +
-  ylab("Mean and Error Bars")
-```
+We initiated our study by generating Student's t-distributions from scratch, which served as the foundation for our Maximum Likelihood Estimation (MLE) analysis. Subsequently, we employed bootstrap methods to refine our MLE estimates. Our findings underscore the significance of selecting suitable Degrees of Freedom (DF) and sample sizes. Specifically, a sample size of 300 with the DF set at 10 was identified as providing an optimal equilibrium between Mean Squared Error (MSE) and Bias. Our comparative analysis of MLE and Bootstrap approaches further indicated that while Bootstrap holds benefits for smaller sample sizes due to performance comparable to MLE, its greater computational demand renders it less favorable for larger datasets. Therefore, MLE stands out as the more viable option for substantial data collections, highlighting the necessity of choosing the appropriate statistical method based on the size of the dataset and computational resources.
