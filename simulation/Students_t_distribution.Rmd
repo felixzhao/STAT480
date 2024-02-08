@@ -119,26 +119,6 @@ plot_dist(nu)
 # Propose your own pseudorandom number generator that produces deviates from the Student's t distribution
 
 ```{r}
-# this not use runif only, thus ignore it
-
-# generate_t_distribution <- function(n, nu) {
-#   Z <- rnorm(n)
-#   X <- rchisq(n, df = nu)
-#   T <- Z / sqrt(X / nu)
-#   return(T)
-# }
-# 
-# # Example usage
-# n <- 1000    # number of random values to generate
-# nu <- 5      # degrees of freedom
-# t_values <- generate_t_distribution(n, nu)
-# 
-# # You can plot to see the distribution
-# hist(t_values, breaks = 30, main = "Generated Student's t-Distribution", xlab = "T-values")
-
-```
-
-```{r}
 generate_normal <- function(n) {
   # Generate n/2 pairs of uniform random numbers
   u1 <- runif(n / 2)
@@ -182,99 +162,7 @@ hist(t_samples, breaks=40, main="Histogram of samples from Student's t-distribut
 
 ```
 
-# 5. Given $X = (X_{1},X_{2}, ...,X_{n})$ a random sample of i.i.d. Student's t variables,
-
-## obtain your own ***maximum likelihood estimator*** for (a,b), say $\widehat{(a,b)}_{ML}$. Implement it.
-
-```{r}
-# # Student's t PDF function
-# student_t_pdf <- function(t, nu) {
-#   gamma((nu + 1) / 2) / (sqrt(nu * pi) * gamma(nu / 2)) * (1 + (t^2) / nu)^(-(nu + 1) / 2)
-# }
-# 
-# # Log-Likelihood function using the custom Student's t PDF
-# log_likelihood_t <- function(v, data) {
-#   sum(log(sapply(data, student_t_pdf, nu = v)))
-# }
-# 
-# # Function to find MLE of degrees of freedom (v)
-# mle_t_distribution <- function(data) {
-#   # Ensure data does not contain non-finite values
-#   data <- data[is.finite(data)]
-#   
-#   # Optim function with bounds for v and adjusted initial value
-#   mle <- optim(par = 4, fn = function(v) -log_likelihood_t(v, data), 
-#                method = "L-BFGS-B", lower = 2, upper = 30, control = list(fnscale = -1))
-#   return(mle$par)
-# }
-# 
-# # Generate random data using the custom Student's t distribution function
-# data_sample <- generate_t_distribution(100, 5)  # Example data generation
-# 
-# # Estimate degrees of freedom using MLE
-# estimated_v <- mle_t_distribution(data_sample)
-# print(estimated_v)
-```
-
-```{r}
-# # Log-Likelihood function for the Student's t-distribution
-# log_likelihood <- function(v, data) {
-#   n <- length(data)
-#   log_likelihood <- sum(stats::dt(data, df=v, log=TRUE))
-#   return(-log_likelihood)  # Return negative because 'optim' minimizes
-# }
-# 
-# # MLE Estimator for degrees of freedom of Student's t-distribution
-# mle_student_t <- function(data) {
-#   # Initial guess for degrees of freedom
-#   start_v <- 10
-#   
-#   # Optimize the log-likelihood function
-#   mle <- optim(par = start_v, fn = log_likelihood, data = data, method = "L-BFGS-B", lower = 2.01, upper = 100)
-#   
-#   # Return the estimated degrees of freedom
-#   return(mle$par)
-# }
-# 
-# # Example usage with simulated data
-# set.seed(123)
-# # Generate some data from a Student's t-distribution with 5 degrees of freedom
-# data <- rt(100, df = 5)
-# 
-# # Estimate the degrees of freedom
-# estimated_df <- mle_student_t(data)
-# estimated_df
-
-```
-
-```{r}
-
-# # log likelihood from scartch
-# 
-# log_likelihood_v <- function(v, data) {
-#   if(v <= 0) return(Inf) # Ensure v is positive
-#   n <- length(data)
-#   mu <- 0 # Assuming mean is 0
-#   sigma <- 1 # Assuming standard deviation is 1
-#   gamma_part <- lgamma((v + 1) / 2) - lgamma(v / 2) - 0.5*log(v*pi) - log(sigma)
-#   summand <- -(v + 1) / 2 * log(1 + (data - mu)^2 / (v * sigma^2))
-#   log_likelihood <- sum(gamma_part + summand)
-#   return(-log_likelihood) # Return negative for minimization
-# }
-# 
-# # Use optim to find the MLE of v
-# find_mle_v <- function(data) {
-#   result <- optim(par = 5, fn = log_likelihood_v, data = data, method = "L-BFGS-B", lower = 0.001, upper = 100)
-#   return(result$par)
-# }
-# 
-# # Example usage
-# set.seed(123)
-# data <- rt(n = 100, df = 5) # Simulated data for testing
-# mle_v <- find_mle_v(data)
-# mle_v
-
-```
+# Given $X = (X_{1},X_{2}, ...,X_{n})$ a random sample of i.i.d. Student's t variables
 
 ```{r}
 # log likelihood from scartch
@@ -305,32 +193,6 @@ mle_v
 ```
 
 # Improve by Bootstrap
-
-```{r}
-# # Bootstrap-enhanced MLE function
-# bootstrap_mle_t_distribution <- function(original_data, n_bootstrap = 1000) {
-#   bootstrap_estimates <- numeric(n_bootstrap)
-# 
-#   for (i in 1:n_bootstrap) {
-#     # Create a bootstrap sample
-#     bootstrap_sample <- sample(original_data, size = length(original_data), replace = TRUE)
-# 
-#     # Estimate v using MLE for the bootstrap sample
-#     estimated_v <- optim(par = 4, fn = function(v) -log_likelihood_t(v, bootstrap_sample), 
-#                          method = "L-BFGS-B", lower = 2, upper = 30, control = list(fnscale = -1))$par
-#     bootstrap_estimates[i] <- estimated_v
-#   }
-# 
-#   # Aggregate results: mean or median can be used
-#   final_estimate <- mean(bootstrap_estimates)
-#   return(list(estimate = final_estimate, bootstrap_estimates = bootstrap_estimates))
-# }
-# 
-# # Example usage
-# data_sample <- generate_t_distribution(100, 5)  # Generate sample data
-# result <- bootstrap_mle_t_distribution(data_sample)
-# print(result)
-```
 
 ```{r}
 
@@ -372,75 +234,6 @@ print(bootstrap_results)
 ```
 
 # Study the Bias and MSE
-
-```{r}
-# # Assuming find_mle_v(data) and bootstrap_mle(data, n_bootstrap) are defined as before
-# 
-# # Function to simulate and calculate bias and MSE
-# simulate_study <- function(v_true, sample_sizes, n_simulations = 100, n_bootstrap = 500) {
-#   results <- expand.grid(sample_size = sample_sizes, sim = 1:n_simulations)
-#   results$mle_v <- NA
-#   results$bootstrap_mean_v <- NA
-#   
-#   for (i in 1:nrow(results)) {
-#     # Generate data
-#     data <- rt(n = results$sample_size[i], df = v_true)
-#     
-#     # MLE estimation
-#     mle_v <- find_mle_v(data)
-#     results$mle_v[i] <- mle_v
-#     
-#     # Bootstrap estimation
-#     bootstrap_res <- bootstrap_mle(data, n_bootstrap)
-#     results$bootstrap_mean_v[i] <- bootstrap_res$mean_estimate
-#   }
-#   
-#   # Calculate bias and MSE for MLE and Bootstrap
-#   results$mle_bias <- results$mle_v - v_true
-#   results$bootstrap_bias <- results$bootstrap_mean_v - v_true
-#   results$mle_mse <- results$mle_bias^2
-#   results$bootstrap_mse <- results$bootstrap_bias^2
-#   
-#   # Aggregate results
-#   summary <- aggregate(cbind(mle_bias, bootstrap_bias, mle_mse, bootstrap_mse) ~ sample_size, data = results, mean)
-#   
-#   return(summary)
-# }
-# 
-# # Example usage
-# sample_sizes <- c(30, 50, 100, 200, 300, 500)
-# v_true <- 5
-# study_results <- simulate_study(v_true, sample_sizes)
-# print(study_results)
-
-```
-
-```{r}
-# library(ggplot2)
-# 
-# # Assuming study_results is the output from the simulate_study function
-# 
-# # Plot for MSE
-# ggplot(study_results, aes(x = sample_size)) +
-#   geom_line(aes(y = mle_mse, colour = "MLE")) +
-#   geom_line(aes(y = bootstrap_mse, colour = "Bootstrap")) +
-#   labs(title = "MSE of MLE and Bootstrap Estimates",
-#        x = "Sample Size",
-#        y = "MSE",
-#        colour = "Estimation Method") +
-#   theme_minimal()
-# 
-# # Plot for Bias
-# ggplot(study_results, aes(x = sample_size)) +
-#   geom_line(aes(y = mle_bias, colour = "MLE")) +
-#   geom_line(aes(y = bootstrap_bias, colour = "Bootstrap")) +
-#   labs(title = "Bias of MLE and Bootstrap Estimates",
-#        x = "Sample Size",
-#        y = "Bias",
-#        colour = "Estimation Method") +
-#   theme_minimal()
-
-```
 
 ```{r}
 library(parallel) # For parallel computation
