@@ -400,10 +400,37 @@ simulate_study <- function(v_true, sample_sizes, n_simulations = 100, n_bootstra
 }
 
 # Example usage
-sample_sizes <- c(30, 100, 500)
+sample_sizes <- c(30, 50, 100, 200, 300, 500)
 v_true <- 5
 study_results <- simulate_study(v_true, sample_sizes)
 print(study_results)
+
+```
+
+```{r}
+library(ggplot2)
+
+# Assuming study_results is the output from the simulate_study function
+
+# Plot for MSE
+ggplot(study_results, aes(x = sample_size)) +
+  geom_line(aes(y = mle_mse, colour = "MLE")) +
+  geom_line(aes(y = bootstrap_mse, colour = "Bootstrap")) +
+  labs(title = "MSE of MLE and Bootstrap Estimates",
+       x = "Sample Size",
+       y = "MSE",
+       colour = "Estimation Method") +
+  theme_minimal()
+
+# Plot for Bias
+ggplot(study_results, aes(x = sample_size)) +
+  geom_line(aes(y = mle_bias, colour = "MLE")) +
+  geom_line(aes(y = bootstrap_bias, colour = "Bootstrap")) +
+  labs(title = "Bias of MLE and Bootstrap Estimates",
+       x = "Sample Size",
+       y = "Bias",
+       colour = "Estimation Method") +
+  theme_minimal()
 
 ```
 
@@ -440,8 +467,8 @@ simulate_study <- function(n, v_true, n_bootstrap = 1000) {
 }
 
 # Scenarios to study: combinations of sample sizes and degrees of freedom
-sample_sizes <- c(30, 100, 500)
-df_values <- c(5, 10, 20)
+sample_sizes <- c(30, 50, 100, 150, 200, 250, 300, 500)
+df_values <- c(5)
 
 # Perform study across all scenarios
 results <- expand.grid(n = sample_sizes, v_true = df_values)
@@ -458,39 +485,126 @@ print(study_results_df)
 ```
 
 ```{r}
+library(ggplot2)
+
+# Convert 'study_results_df' to a long format for easier plotting with ggplot2
+study_results_long <- tidyr::pivot_longer(study_results_df, 
+                                          cols = c(mse_mle, mse_bootstrap, bias_mle, bias_bootstrap),
+                                          names_to = "Estimation_Method", 
+                                          values_to = "Value")
+
+# Splitting the data frame into two: one for MSE and one for Bias for clarity in plotting
+mse_data <- subset(study_results_long, Estimation_Method %in% c("mse_mle", "mse_bootstrap"))
+bias_data <- subset(study_results_long, Estimation_Method %in% c("bias_mle", "bias_bootstrap"))
+
+# Adjusting the Estimation_Method factor for proper labeling
+mse_data$Estimation_Method <- factor(mse_data$Estimation_Method, labels = c("MLE", "Bootstrap"))
+bias_data$Estimation_Method <- factor(bias_data$Estimation_Method, labels = c("MLE", "Bootstrap"))
+
+# Plot for MSE
+ggplot(mse_data, aes(x = n, y = Value, colour = Estimation_Method)) +
+  geom_line() +
+  labs(title = "MSE of MLE and Bootstrap Estimates",
+       x = "Sample Size",
+       y = "MSE",
+       colour = "Estimation Method") +
+  theme_minimal()
+
+# Plot for Bias
+ggplot(bias_data, aes(x = n, y = Value, colour = Estimation_Method)) +
+  geom_line() +
+  labs(title = "Bias of MLE and Bootstrap Estimates",
+       x = "Sample Size",
+       y = "Bias",
+       colour = "Estimation Method") +
+  theme_minimal()
+
 
 ```
 
-```{r}
-library(reshape2)
-```
+Fix sample size as 300, select Parameter V
 
 ```{r}
-set.seed(seed=1234567890, kind="Mersenne-Twister")
+library(parallel) # For parallel computation
 
-N <- c(5, 10, 100)
-Rf <- 30000 # There will be 6000, 3000, and 300 replications for each element in N
-Output <- NULL
+# Assuming `find_mle_v(data)` is your function for estimating degrees of freedom using MLE
+# Assuming `bootstrap_mle(data, n_bootstrap = 1000)` is your function for bootstrap estimation
 
-for(n in N){ # Loop for first factor
-  for(r in 1:round(Rf/n)){ # Replications loop
-    x <- rexp(n) # Same sample for all estimators
-    Output <- rbind(Output, 
-                    c(n,
-                      mean(x),
-                      median(x)/log(2)))
-  }
+# Function to simulate study for a single scenario
+simulate_study <- function(n, v_true, n_bootstrap = 1000) {
+  # Generate data from Student's t-distribution
+  data <- rt(n = n, df = v_true)
+  
+  # Apply MLE to estimate v
+  mle_estimate <- find_mle_v(data)
+  
+  # Apply Bootstrap to estimate v
+  bootstrap_result <- bootstrap_mle(data, n_bootstrap)
+  bootstrap_estimate <- bootstrap_result$mean_estimate
+  
+  # Calculate bias and MSE for MLE and Bootstrap
+  bias_mle <- mle_estimate - v_true
+  mse_mle <- bias_mle^2
+  
+  bias_bootstrap <- bootstrap_estimate - v_true
+  mse_bootstrap <- bias_bootstrap^2
+  
+  # Return results
+  list(n = n, v_true = v_true, bias_mle = bias_mle, mse_mle = mse_mle, 
+       bias_bootstrap = bias_bootstrap, mse_bootstrap = mse_bootstrap)
 }
 
-Output <- data.frame(Output)
-names(Output) <- c("n", "ML", "Med")
-Output$n <- as.factor(Output$n)
+# Scenarios to study: combinations of sample sizes and degrees of freedom
+sample_sizes <- c(300)
+df_values <- c(1, 3, 5, 7, 9, 50, 100)
 
-Output.melt <- melt(data=Output, 
-                    id.vars=1,
-                    measure.vars=2:3,
-                    variable.name="Estimator",
-                    value.name="Estimates")
+# Perform study across all scenarios
+results <- expand.grid(n = sample_sizes, v_true = df_values)
+study_results <- mclapply(1:nrow(results), function(i) {
+  simulate_study(results$n[i], results$v_true[i])
+}, mc.cores = detectCores() - 1)
+
+# Convert results to a dataframe for easier analysis
+study_results_df <- do.call(rbind, lapply(study_results, function(x) data.frame(x)))
+
+# Analyze the results
+print(study_results_df)
+```
+
+```{r}
+library(ggplot2)
+
+# Convert 'study_results_df' to a long format for easier plotting with ggplot2
+study_results_long <- tidyr::pivot_longer(study_results_df, 
+                                          cols = c(mse_mle, mse_bootstrap, bias_mle, bias_bootstrap),
+                                          names_to = "Estimation_Method", 
+                                          values_to = "Value")
+
+# Splitting the data frame into two: one for MSE and one for Bias for clarity in plotting
+mse_data <- subset(study_results_long, Estimation_Method %in% c("mse_mle", "mse_bootstrap"))
+bias_data <- subset(study_results_long, Estimation_Method %in% c("bias_mle", "bias_bootstrap"))
+
+# Adjusting the Estimation_Method factor for proper labeling
+mse_data$Estimation_Method <- factor(mse_data$Estimation_Method, labels = c("MLE", "Bootstrap"))
+bias_data$Estimation_Method <- factor(bias_data$Estimation_Method, labels = c("MLE", "Bootstrap"))
+
+# Plot for MSE
+ggplot(mse_data, aes(x = v_true, y = Value, colour = Estimation_Method)) +
+  geom_line() +
+  labs(title = "MSE of MLE and Bootstrap Estimates",
+       x = "Sample Size",
+       y = "MSE",
+       colour = "Estimation Method") +
+  theme_minimal()
+
+# Plot for Bias
+ggplot(bias_data, aes(x = v_true, y = Value, colour = Estimation_Method)) +
+  geom_line() +
+  labs(title = "Bias of MLE and Bootstrap Estimates",
+       x = "Sample Size",
+       y = "Bias",
+       colour = "Estimation Method") +
+  theme_minimal()
 ```
 
 ```{r}
