@@ -1,11 +1,19 @@
+.DS_Store
+
+literature_reivews/*.pdf
+paper_review/*.pdf
+simulation/*.pdf
+proposal_presentation/*.pdf
+
 *.aux
 *.fdb_latexmk
 *.fls
 *.log
-literature_reviews/*.pdf
 *.bbl
 *.blg
 *.synctex.gz
 
-.DS_Store
-*.pdf
+proposal_presentation/*.nav
+proposal_presentation/*.out
+proposal_presentation/*.snm
+proposal_presentation/*.toc
