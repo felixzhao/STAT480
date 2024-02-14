@@ -228,6 +228,26 @@ where:
 
 \end{frame}
 
+%-----------------------------------------------------------------------------
+
+\begin{frame}\frametitle{Methods: EM Algorithm}
+
+  Finite Mixture model is implemented by E-M algorithm.
+In E-step, update variables
+each observation will be put into components (clusters) based on current distribution parameters
+In M-step, update parameters
+The parameters of each component will be update based on the observation adjustment
+Repeat E-M step until converged (difference between parameter estimates below the threshold)
+
+
+\begin{figure}
+  \centering
+  \epsfig{file=images/em,width=0.33\linewidth}
+  \caption{E-M Algorithm~\cite{phdthesis}}
+\end{figure}
+
+\end{frame}
+
 % %--------------------------------------------------------
 % \begin{frame}\frametitle{Background: Proportional odds model}
 
