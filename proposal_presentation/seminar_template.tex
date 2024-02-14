@@ -179,7 +179,7 @@ Ordinal data, a pivotal concept in statistical analysis, represents categorical 
   \[
   \log\left(\frac{P(Y \leq j | \mathbf{X})}{1 - P(Y \leq j | \mathbf{X})}\right) = \theta_j - \boldsymbol{\beta}^T\mathbf{X}
   \]
-  
+~\cite{mccullagh1980regression}
   where:
   {\small
     \begin{itemize}
@@ -203,7 +203,8 @@ The logit for category $j$ is then:
 \log\left(\frac{P(Y_i = j | X = x)}{1 - P(Y_i = 1 | X = x)}\right) = \theta_j + \beta^T x
 \]
 where $\theta_j$ is the intercept for category $j$, and $\beta$ is a vector of coefficients for $X$.
-  
+~\cite{anderson1984regression}
+
 \end{frame}
 
 %-----------------------------------------------------------------------------
@@ -214,17 +215,26 @@ where $\theta_j$ is the intercept for category $j$, and $\beta$ is a vector of c
 \begin{equation}
 p(x_i|\mathbf{\Theta}) = \sum_{k=1}^{K} \pi_k f(x_i|\theta_k)
 \end{equation}
-where:
-{\small
-\begin{itemize}
-    \item $p(x_i|\mathbf{\Theta})$ denotes the overall mixture model's density or mass function for observation $x_i$.
-    \item $K$ is the total number of component distributions in the mixture.
-    \item $\pi_k$ represents the mixing proportion of the $k$th component, satisfying $0 \leq \pi_k \leq 1$ and $\sum_{k=1}^{K} \pi_k = 1$.
-    \item $f(x_i|\theta_k)$ is the probability density function (pdf) or probability mass function (pmf) of the $k$th component distribution evaluated at $x_i$.
-    \item $\theta_k$ denotes the parameter vector of the $k$th component distribution.
-    \item $\mathbf{\Theta}$ symbolizes the complete set of parameters for the mixture model, including both the mixing proportions $\{\pi_1, \ldots, \pi_K\}$ and the parameters of the component distributions $\{\theta_1, \ldots, \theta_K\}$.
-\end{itemize}
-}
+% where:
+% {\small
+% \begin{itemize}
+%     \item $p(x_i|\mathbf{\Theta})$ denotes the overall mixture model's density or mass function for observation $x_i$.
+%     \item $K$ is the total number of component distributions in the mixture.
+%     \item $\pi_k$ represents the mixing proportion of the $k$th component, satisfying $0 \leq \pi_k \leq 1$ and $\sum_{k=1}^{K} \pi_k = 1$.
+%     \item $f(x_i|\theta_k)$ is the probability density function (pdf) or probability mass function (pmf) of the $k$th component distribution evaluated at $x_i$.
+%     \item $\theta_k$ denotes the parameter vector of the $k$th component distribution.
+%     \item $\mathbf{\Theta}$ symbolizes the complete set of parameters for the mixture model, including both the mixing proportions $\{\pi_1, \ldots, \pi_K\}$ and the parameters of the component distributions $\{\theta_1, \ldots, \theta_K\}$.
+% \end{itemize}
+% }
+
+\begin{figure}
+  \centering
+  % If you continue using \epsfig
+  \epsfig{file=images/fmm_2,width=0.6\linewidth}
+  % If you switch to \includegraphics from the graphicx package
+  % \includegraphics[width=0.6\linewidth]{images/bmi_2}
+  \caption{FMMs publications index trend~\cite{fmmtrend}}
+\end{figure}
 
 \end{frame}
 
@@ -245,6 +255,49 @@ Repeat E-M step until converged (difference between parameter estimates below th
   \epsfig{file=images/em,width=0.33\linewidth}
   \caption{E-M Algorithm~\cite{phdthesis}}
 \end{figure}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+
+\begin{frame}\frametitle{Methods: Prediction Task}
+
+  \begin{itemize}
+    \item Prediction the cluster of new observation, based on the pre-trained FMMs Model
+    \item Prediction will not update the parameter on each components (clusters)
+    \item The benefit is prediction no need to repeat the E-M algorithm which is high cost. This approach is more effective and low cost. 
+    
+  \end{itemize}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+
+\begin{frame}\frametitle{Methods: Prediction Process}
+
+  \begin{figure}
+    \centering
+    % If you continue using \epsfig
+    \epsfig{file=images/process,width=1.0\linewidth}
+    % If you switch to \includegraphics from the graphicx package
+    % \includegraphics[width=0.6\linewidth]{images/bmi_2}
+    \caption{new observation cluster prediction process}
+  \end{figure}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+
+\begin{frame}\frametitle{Research Goals}
+
+  \begin{enumerate}
+    \item Analyze performance of the prediction task of different models for kind of distributions
+    \item Analyze performance of the prediction task of models for different types of distributions
+  \end{enumerate}
+
+  \vspace{1em}
+  \hspace{1em}\textbf{Notes}: This work will based on Real DataSet.
+
 
 \end{frame}
 
