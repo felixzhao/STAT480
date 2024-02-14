@@ -168,6 +168,66 @@ Ordinal data, a pivotal concept in statistical analysis, represents categorical 
   
 \end{frame}
 
+%-----------------------------------------------------------------------------
+
+\begin{frame}\frametitle{Methods: Proportional Odds Model}
+
+  Given an ordinal response variable $Y$ with $J$ ordered categories ($j=1, 2, \ldots, J$), 
+  and a set of predictor variables represented by the vector $\mathbf{X}$, the model expresses 
+  the cumulative log odds of $Y$ being less than or equal to category $j$ as follows:
+  
+  \[
+  \log\left(\frac{P(Y \leq j | \mathbf{X})}{1 - P(Y \leq j | \mathbf{X})}\right) = \theta_j - \boldsymbol{\beta}^T\mathbf{X}
+  \]
+  
+  where:
+  {\small
+    \begin{itemize}
+        \item $P(Y \leq j | \mathbf{X})$ denotes the cumulative probability of $Y$ being in category $j$ or any category below $j$, given the predictors $\mathbf{X}$.
+        \item $\theta_j$ represents the threshold (or intercept) for category $j$, which allows the log odds to be specific for each category level.
+        \item $\boldsymbol{\beta}^T\mathbf{X}$ is the linear predictor, where $\mathbf{X}$ is the matrix of predictor variables and $\boldsymbol{\beta}$ is the vector of coefficients associated with these variables. This term models the effect of the predictors on the log odds.
+    \end{itemize}
+  }
+  
+  
+\end{frame}
+
+%-----------------------------------------------------------------------------
+
+\begin{frame}\frametitle{Methods: Ordered Stereotype Regression Model}
+
+  Given an ordinal response variable $Y$ with categories ($j=1, 2, \ldots, J$), $i$ is number of observation, and a vector of independent variables $X$, the probability of $Y$ falling into the $j$th category, given $X = x$, is denoted as $P(Y_i = j | X = x)$.
+
+The logit for category $j$ is then:
+\[
+\log\left(\frac{P(Y_i = j | X = x)}{1 - P(Y_i = 1 | X = x)}\right) = \theta_j + \beta^T x
+\]
+where $\theta_j$ is the intercept for category $j$, and $\beta$ is a vector of coefficients for $X$.
+  
+\end{frame}
+
+%-----------------------------------------------------------------------------
+
+\begin{frame}\frametitle{Methods: Finite Mixture Model}
+
+  The Finite mixture model is defined as:
+\begin{equation}
+p(x_i|\mathbf{\Theta}) = \sum_{k=1}^{K} \pi_k f(x_i|\theta_k)
+\end{equation}
+where:
+{\small
+\begin{itemize}
+    \item $p(x_i|\mathbf{\Theta})$ denotes the overall mixture model's density or mass function for observation $x_i$.
+    \item $K$ is the total number of component distributions in the mixture.
+    \item $\pi_k$ represents the mixing proportion of the $k$th component, satisfying $0 \leq \pi_k \leq 1$ and $\sum_{k=1}^{K} \pi_k = 1$.
+    \item $f(x_i|\theta_k)$ is the probability density function (pdf) or probability mass function (pmf) of the $k$th component distribution evaluated at $x_i$.
+    \item $\theta_k$ denotes the parameter vector of the $k$th component distribution.
+    \item $\mathbf{\Theta}$ symbolizes the complete set of parameters for the mixture model, including both the mixing proportions $\{\pi_1, \ldots, \pi_K\}$ and the parameters of the component distributions $\{\theta_1, \ldots, \theta_K\}$.
+\end{itemize}
+}
+
+\end{frame}
+
 % %--------------------------------------------------------
 % \begin{frame}\frametitle{Background: Proportional odds model}
 
