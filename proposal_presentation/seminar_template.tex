@@ -170,6 +170,37 @@ Ordinal data, a pivotal concept in statistical analysis, represents categorical 
 
 %-----------------------------------------------------------------------------
 
+\begin{frame}\frametitle{Methods: Finite Mixture Model}
+
+  The Finite mixture model is defined as:
+\begin{equation}
+p(x_i|\mathbf{\Theta}) = \sum_{k=1}^{K} \pi_k f(x_i|\theta_k)
+\end{equation}
+% where:
+% {\small
+% \begin{itemize}
+%     \item $p(x_i|\mathbf{\Theta})$ denotes the overall mixture model's density or mass function for observation $x_i$.
+%     \item $K$ is the total number of component distributions in the mixture.
+%     \item $\pi_k$ represents the mixing proportion of the $k$th component, satisfying $0 \leq \pi_k \leq 1$ and $\sum_{k=1}^{K} \pi_k = 1$.
+%     \item $f(x_i|\theta_k)$ is the probability density function (pdf) or probability mass function (pmf) of the $k$th component distribution evaluated at $x_i$.
+%     \item $\theta_k$ denotes the parameter vector of the $k$th component distribution.
+%     \item $\mathbf{\Theta}$ symbolizes the complete set of parameters for the mixture model, including both the mixing proportions $\{\pi_1, \ldots, \pi_K\}$ and the parameters of the component distributions $\{\theta_1, \ldots, \theta_K\}$.
+% \end{itemize}
+% }
+
+\begin{figure}
+  \centering
+  % If you continue using \epsfig
+  \epsfig{file=images/fmm_2,width=0.6\linewidth}
+  % If you switch to \includegraphics from the graphicx package
+  % \includegraphics[width=0.6\linewidth]{images/bmi_2}
+  \caption{FMMs publications index trend~\cite{fmmtrend}}
+\end{figure}
+
+\end{frame}
+
+%-----------------------------------------------------------------------------
+
 \begin{frame}\frametitle{Methods: Proportional Odds Model}
 
   Proportional Odds Model~\cite{mccullagh1980regression} Given an ordinal response variable $Y$ with $J$ ordered categories ($j=1, 2, \ldots, J$), 
@@ -212,37 +243,6 @@ where:
         \item Stereotype model is unconstrained, $\phi$ add restricts to make it works for ordinal data. $1 = \phi_1 \geq \phi_2 \geq \ldots \geq \phi_k = 0.$ 
 \end{itemize}
 }
-
-\end{frame}
-
-%-----------------------------------------------------------------------------
-
-\begin{frame}\frametitle{Methods: Finite Mixture Model}
-
-  The Finite mixture model is defined as:
-\begin{equation}
-p(x_i|\mathbf{\Theta}) = \sum_{k=1}^{K} \pi_k f(x_i|\theta_k)
-\end{equation}
-% where:
-% {\small
-% \begin{itemize}
-%     \item $p(x_i|\mathbf{\Theta})$ denotes the overall mixture model's density or mass function for observation $x_i$.
-%     \item $K$ is the total number of component distributions in the mixture.
-%     \item $\pi_k$ represents the mixing proportion of the $k$th component, satisfying $0 \leq \pi_k \leq 1$ and $\sum_{k=1}^{K} \pi_k = 1$.
-%     \item $f(x_i|\theta_k)$ is the probability density function (pdf) or probability mass function (pmf) of the $k$th component distribution evaluated at $x_i$.
-%     \item $\theta_k$ denotes the parameter vector of the $k$th component distribution.
-%     \item $\mathbf{\Theta}$ symbolizes the complete set of parameters for the mixture model, including both the mixing proportions $\{\pi_1, \ldots, \pi_K\}$ and the parameters of the component distributions $\{\theta_1, \ldots, \theta_K\}$.
-% \end{itemize}
-% }
-
-\begin{figure}
-  \centering
-  % If you continue using \epsfig
-  \epsfig{file=images/fmm_2,width=0.6\linewidth}
-  % If you switch to \includegraphics from the graphicx package
-  % \includegraphics[width=0.6\linewidth]{images/bmi_2}
-  \caption{FMMs publications index trend~\cite{fmmtrend}}
-\end{figure}
 
 \end{frame}
 
