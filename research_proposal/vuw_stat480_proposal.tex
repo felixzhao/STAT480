@@ -13,9 +13,13 @@
 
 \begin{document}
 
-\title{Ordinal Data clustering and prediction}
+\title{
+  STAT480 Research Preparation for Data Science\\
+  Ordinal Data clustering and prediction}
 
-\author{Quan Zhao}
+\author{Quan Zhao\\
+Email: felixz2010@gmail.com\\
+Student ID 300471028}
 
 \maketitle
 
@@ -206,11 +210,26 @@ Compare with previous work, Jacques and Biernacki's (~\cite{jacques2018model}) m
 
 Compared to tree based or distance based clustering algorithms, statistical based clustering algorithms demonstrate superior performance with ordinal data, particularly in scenarios involving multiclass and multioutput cases. 
 This advantage stems from two key factors: firstly, ordinal data do not presuppose equal distances between categories, a condition that distance-based methods often rely on. Secondly, ordinal data typically encompass only a few categories, which can limit the effectiveness of tree-based methods designed to partition data across a broader numerical range.
-\section{Conclusion and Future Directions}
 
-The evolution of mixture models from McLachlan's initial work in 2000 to advanced models in 2019 showcases a field marked by dynamic growth and innovation. These models have not only solved historical challenges but also set the stage for future advancements. As the field progresses, a key focus is integrating machine learning with traditional statistical methods, enhancing the capability of mixture models to accurately predict cluster membership for new data points. This is especially relevant in artificial intelligence applications, where mixture models contribute to improved pattern recognition and decision-making.
+\section{Research Goals}
 
-Furthermore, as data complexity and volume continue to escalate, the demand for robust, efficient, and versatile mixture models is more critical than ever. Future research is expected to concentrate on scaling up these models and improving their adaptability across diverse data types and structures. This progression underscores the mixture models' indispensable role in modern data analysis, poised to address the ever-growing challenges in data science and AI.
+This research aims to systematically analyze and compare the performance of different predictive models in clustering ordinal data derived from various distributions. Recognizing that the clustering of ordinal data under normal distribution conditions has been well-researched, this work shifts the focus towards less commonly explored distributions, such as Bernoulli, Poisson, and others, to understand their impact on model performance. The primary objective is to elucidate how these types of distributions affect the models' ability to accurately predict the cluster memberships of ordinal data. By doing so, we intend to:
+
+\begin{enumerate}
+    \item \textbf{Evaluate Model Robustness:} Assess the adaptability and robustness of each predictive model in accurately clustering ordinal data from diverse distributions, with a particular focus on non-normal distributions like Bernoulli and Poisson. This includes a comprehensive examination of performance metrics under various distributional conditions to identify each model's strengths and limitations.
+    \item \textbf{Identify Optimal Clustering Models:} Determine which models consistently demonstrate superior performance in predicting clusters for ordinal data across a broad spectrum of non-normal distributions. This will aid in recommending specific models for practitioners tasked with clustering ordinal data, guiding them to the most effective tools based on the data's distribution characteristics.
+    \item \textbf{Improve Clustering Accuracy:} Through detailed comparative analysis, this study aims to offer insights that could lead to improved accuracy in clustering ordinal data. Understanding the impact of different distributions, especially non-normal ones, on model performance will allow for the customization of clustering approaches to better match the data's properties, thus enhancing prediction reliability.
+    \item \textbf{Advance Methodological Approaches:} The findings from this research are expected to make significant contributions to the methodological advancements in the field of data analytics, especially in clustering ordinal data. Highlighting the relationship between data distributions, particularly non-normal distributions, and model performance will direct future research toward the development of more adaptive and sensitive clustering techniques.
+\end{enumerate}
+
+This research will provide a thorough empirical analysis on the critical aspect of distributional sensitivity in predictive modeling for clustering ordinal data, facilitating more informed model selection and leading to more accurate cluster prediction in various application domains.
+
+
+% \section{Conclusion and Future Directions}
+
+% The evolution of mixture models from McLachlan's initial work in 2000 to advanced models in 2019 showcases a field marked by dynamic growth and innovation. These models have not only solved historical challenges but also set the stage for future advancements. As the field progresses, a key focus is integrating machine learning with traditional statistical methods, enhancing the capability of mixture models to accurately predict cluster membership for new data points. This is especially relevant in artificial intelligence applications, where mixture models contribute to improved pattern recognition and decision-making.
+
+% Furthermore, as data complexity and volume continue to escalate, the demand for robust, efficient, and versatile mixture models is more critical than ever. Future research is expected to concentrate on scaling up these models and improving their adaptability across diverse data types and structures. This progression underscores the mixture models' indispensable role in modern data analysis, poised to address the ever-growing challenges in data science and AI.
 
 \printbibliography
 
