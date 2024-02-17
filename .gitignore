@@ -4,6 +4,7 @@ literature_reivews/*.pdf
 paper_review/*.pdf
 simulation/*.pdf
 proposal_presentation/*.pdf
+research_proposal/*.pdf
 
 *.aux
 *.fdb_latexmk
@@ -17,3 +18,6 @@ proposal_presentation/*.nav
 proposal_presentation/*.out
 proposal_presentation/*.snm
 proposal_presentation/*.toc
+
+research_proposal/*.bcf
+research_proposal/*.run.xml
