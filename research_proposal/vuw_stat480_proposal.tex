@@ -211,6 +211,16 @@ Compare with previous work, Jacques and Biernacki's (~\cite{jacques2018model}) m
 Compared to tree based or distance based clustering algorithms, statistical based clustering algorithms demonstrate superior performance with ordinal data, particularly in scenarios involving multiclass and multioutput cases. 
 This advantage stems from two key factors: firstly, ordinal data do not presuppose equal distances between categories, a condition that distance-based methods often rely on. Secondly, ordinal data typically encompass only a few categories, which can limit the effectiveness of tree-based methods designed to partition data across a broader numerical range.
 
+
+\section{methods}
+
+\subsection{Expectation-Maximization (EM) algorithm}
+
+The Expectation-Maximization (EM) algorithm is a cornerstone in statistical computation, notably in the realm of finite mixture modeling for clustering ordinal data. Originally introduced by Dempster et al. (1977), the EM algorithm iteratively optimizes the likelihood function in scenarios with incomplete data, making it indispensable for estimating parameters in finite mixture models. This algorithm's adaptability is particularly beneficial for handling the complexities associated with ordinal data, which is prevalent in fields such as social sciences and medical research.
+
+Finite mixture models, which posit that a population is composed of two or more underlying distributions, are aptly suited for clustering ordinal data. Fernandez, Arnold, and Pledger (2016) further this application by utilizing the EM algorithm to implement likelihood-based clustering methods for ordinal data, leveraging Bernoulli and Poisson distributions as foundational elements. This approach underscores the EM algorithm's utility in revealing underlying population structures, thereby enriching our understanding of ordinal data's distributional characteristics.
+
+
 \section{Research Goals}
 
 This research aims to systematically analyze and compare the performance of different predictive models in clustering ordinal data derived from various distributions. Recognizing that the clustering of ordinal data under normal distribution conditions has been well-researched, this work shifts the focus towards less commonly explored distributions, such as Bernoulli, Poisson, and others, to understand their impact on model performance. The primary objective is to elucidate how these types of distributions affect the models' ability to accurately predict the cluster memberships of ordinal data. By doing so, we intend to:
