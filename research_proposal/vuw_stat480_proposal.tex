@@ -109,43 +109,6 @@ Model-based clustering is often more suitable for ordinal data—data that conta
 
 \section{Statistical-based Ordinal Data Clustering}
 
-\subsection{Proportional Odds model}
-
-The Proportional Odds model is another approach which defined for an ordinal response variable $Y$ with $J$ ordered categories ($j=1, 2, \ldots, J$). 
-Given a set of predictor variables represented by the vector $X$, the model expresses the cumulative log odds of $Y$ being less than or equal to a category $j$ as follows:
-
-\[
-\log\left(\frac{P(Y \leq j | X = x)}{P(Y > j | X = x)}\right) = \theta_j - \beta^T x
-\]
-
-where:
-\begin{itemize}
-    \item $P(Y \leq j | X = x)$ is the cumulative probability of $Y$ being in category $j$ or any category below $j$, given the predictors $x$.
-    \item $\theta_j$ is the intercept term for category $j$, which allows the log odds to vary across categories.
-    \item $\beta^T x$ represents the linear predictor, with $X$ being the matrix of predictor variables and $\beta$ the vector of coefficients corresponding to these variables.
-    \item The model assumes that the effect of the predictors on the log odds of being in a lower versus a higher category is proportional across all categories, which is encapsulated in the term $\beta^T x$.
-\end{itemize}
-
-The Proportional Odds assumption implies that the vector of coefficients $\beta$ is the same across all category thresholds. (~\cite{mccullagh1980regression})
-
-\subsection{Ordered Stereotype Regression Model}
-
-The Ordered Stereotype Regression Model is a statistical approach designed to analyze ordinal dependent variables, where the outcomes are categories with a natural order but not a quantifiable difference between them.
-
-Given an ordinal response variable $Y$ with categories ($j=1, 2, \ldots, J$), and a vector of independent variables $X$, the probability of $Y$ falling into the $j$th category, given $X = x$, is denoted as $P(Y = j | X = x)$.
-
-
-The logit for category $j$ is then:
-\[
-\log\left(\frac{P(Y = j | X = x)}{1 - P(Y = 1 | X = x)}\right) = \theta_j + \phi_j \beta^T x
-\]
-where $\theta_j$ is the intercept for category $j$, and $\beta$ is a vector of coefficients for $X$.
-And come with hypothesis
-$1 = \phi_1 \geq \phi_2 \geq \ldots \geq \phi_k = 0.$
-Stereotype model is unconstrained, $\phi$ add restricts to make it works for ordinal data.
-This allows the effects to vary across categories but constrains them to follow a scaled version of a common pattern. (~\cite{anderson1984regression})
-
-
 \subsection{Finite Mixture modeling}
 
 Finite mixture models have emerged as a versatile and powerful statistical tool, garnering increasing attention across various scientific and research disciplines. These models, predicated on the assumption that observed data arise from a blend of several probability distributions, each representing a distinct subpopulation, have revolutionized our approach to understanding complex data structures. The designation ``finite'' in finite mixture models is pivotal, indicating the specific, but variable, number of components or subgroups within the data. This finite aspect offers a balance between model complexity and interpretability, allowing for detailed yet manageable analysis of diverse datasets.
@@ -214,12 +177,58 @@ This advantage stems from two key factors: firstly, ordinal data do not presuppo
 
 \section{Methodology}
 
+\subsection{Proportional Odds model}
+
+The Proportional Odds model is another approach which defined for an ordinal response variable $Y$ with $J$ ordered categories ($j=1, 2, \ldots, J$). 
+Given a set of predictor variables represented by the vector $X$, the model expresses the cumulative log odds of $Y$ being less than or equal to a category $j$ as follows:
+
+\[
+\log\left(\frac{P(Y \leq j | X = x)}{P(Y > j | X = x)}\right) = \theta_j - \beta^T x
+\]
+
+where:
+\begin{itemize}
+    \item $P(Y \leq j | X = x)$ is the cumulative probability of $Y$ being in category $j$ or any category below $j$, given the predictors $x$.
+    \item $\theta_j$ is the intercept term for category $j$, which allows the log odds to vary across categories.
+    \item $\beta^T x$ represents the linear predictor, with $X$ being the matrix of predictor variables and $\beta$ the vector of coefficients corresponding to these variables.
+    \item The model assumes that the effect of the predictors on the log odds of being in a lower versus a higher category is proportional across all categories, which is encapsulated in the term $\beta^T x$.
+\end{itemize}
+
+The Proportional Odds assumption implies that the vector of coefficients $\beta$ is the same across all category thresholds. (~\cite{mccullagh1980regression})
+
+\subsection{Ordered Stereotype Regression Model}
+
+The Ordered Stereotype Regression Model is a statistical approach designed to analyze ordinal dependent variables, where the outcomes are categories with a natural order but not a quantifiable difference between them.
+
+Given an ordinal response variable $Y$ with categories ($j=1, 2, \ldots, J$), and a vector of independent variables $X$, the probability of $Y$ falling into the $j$th category, given $X = x$, is denoted as $P(Y = j | X = x)$.
+
+
+The logit for category $j$ is then:
+\[
+\log\left(\frac{P(Y = j | X = x)}{1 - P(Y = 1 | X = x)}\right) = \theta_j + \phi_j \beta^T x
+\]
+where $\theta_j$ is the intercept for category $j$, and $\beta$ is a vector of coefficients for $X$.
+And come with hypothesis
+$1 = \phi_1 \geq \phi_2 \geq \ldots \geq \phi_k = 0.$
+Stereotype model is unconstrained, $\phi$ add restricts to make it works for ordinal data.
+This allows the effects to vary across categories but constrains them to follow a scaled version of a common pattern. (~\cite{anderson1984regression})
+
+
+
 \subsection{Expectation-Maximization (EM) algorithm}
 
-The Expectation-Maximization (EM) algorithm is a cornerstone in statistical computation, notably in the realm of finite mixture modeling for clustering ordinal data. Originally introduced by Dempster et al. (1977), the EM algorithm iteratively optimizes the likelihood function in scenarios with incomplete data, making it indispensable for estimating parameters in finite mixture models. This algorithm's adaptability is particularly beneficial for handling the complexities associated with ordinal data, which is prevalent in fields such as social sciences and medical research.
+The EM (Expectation-Maximization) algorithm is a paramount tool in the realm of statistical analysis, especially in the context of finite mixture modeling for clustering ordinal data. This iterative process, consisting of Expectation (E) and Maximization (M) steps, adeptly handles incomplete data scenarios, offering a methodical approach to estimate model parameters.
 
-Finite mixture models, which posit that a population is composed of two or more underlying distributions, are aptly suited for clustering ordinal data. Fernandez, Arnold, and Pledger (2016) further this application by utilizing the EM algorithm to implement likelihood-based clustering methods for ordinal data, leveraging Bernoulli and Poisson distributions as foundational elements. This approach underscores the EM algorithm's utility in revealing underlying population structures, thereby enriching our understanding of ordinal data's distributional characteristics.
+The E-Step serves as the foundation for expectation calculation, where latent variables are considered to encapsulate the unknown cluster membership for each data point, leverages the ordered stereotype model or Proportional Odds model to refine the estimation of posterior probabilities.. (~\cite{fernandez2016mixture}) highlight this step's role in assessing the a priori probabilities of data points belonging to various clusters, thereby computing their expected values. This involves evaluating the posterior probabilities that each row (or data point) belongs to a specific row group or cluster, based on current parameter estimates. The E-step effectively sets the stage for the M-step by calculating the conditional expectation of the complete data log-likelihood, incorporating both the a priori probabilities and the observed data to refine the parameter estimates.
 
+The M-Step then capitalizes on the groundwork laid by the E-step, aiming to globally maximize the log-likelihood function derived from the E-step's output. 
+This phase is pivotal in updating the estimation of row-cluster (col-cluster) proportions and other model parameters, ensuring the model iteratively converges to the maximum likelihood estimates. 
+The M-step's essence lies in its ability to refine parameter estimates, thereby enhancing the model's accuracy in clustering the data points into the correct groups based on the updated posterior probabilities.
+the ordered stereotype model's or Proportional Odds model's incorporation is instrumental in optimizing the parameter estimates that define cluster characteristics. 
+
+In the application of the EM algorithm to ordinal data clustering within finite mixture models, the algorithm's iterative nature—alternating between estimating the expected latent variables (E-step) and maximizing the likelihood function with updated parameters (M-step)—is instrumental. This iterative refinement continues until the parameter estimates stabilize, indicating convergence to a solution that best fits the data.
+
+This methodology, as applied to ordinal data clustering, underscores the EM algorithm's versatility and efficacy in uncovering the latent structure within complex datasets. By leveraging the EM algorithm's strengths, researchers can navigate the challenges posed by incomplete data, ultimately enhancing our understanding of the underlying patterns and relationships within ordinal data.
 
 \section{Research Goals}
 
