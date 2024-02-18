@@ -107,6 +107,26 @@ There are primarily two types of clustering: distance-based clustering and model
 
 Model-based clustering is often more suitable for ordinal data—data that contain natural, orderable categories. This is because ordinal data, which embody an inherent ranking or order (e.g., survey responses from "strongly agree" to "strongly disagree"), do not fit well with the distance metrics used in distance-based clustering, which treat distances between all pairs of categories as equal. Model-based clustering, on the other hand, can accommodate the ordinal nature by incorporating it into the model assumptions, allowing for a more nuanced understanding and grouping based on the inherent order of the data. This method can capture the ordinal information effectively, providing more meaningful and interpretable clusters for analysis.
 
+\subsection*{Prediction}
+
+Prediction in clustering encompasses the task of forecasting where new, unseen data points belong within a pre-established cluster framework, leveraging patterns discerned from a dataset. This process not only builds upon the foundational step of identifying clusters but also utilizes either post-clustering classification algorithms or direct predictive clustering techniques. The core objective is to employ the characteristics of existing clusters—such as their centroids and distribution—to accurately determine the most fitting cluster for each new data point. This approach bridges the gap between mere data grouping and the strategic allocation of future data instances, underscoring the predictive power inherent in a well-structured clustering analysis.
+
+\subsection*{Key Differences}
+
+\begin{enumerate}
+  \item \textbf{Supervision}: 
+  Clustering is unsupervised, focusing on pattern discovery without known outcomes. Prediction in clustering, however, may incorporate supervised learning by using clusters as labels for predicting new data point assignments.
+  \item \textbf{Objective}:
+  The objective of clustering is to find natural groupings within the data. In contrast, prediction in clustering aims to assign new data points to these groups.
+  \item \textbf{Approach}:
+  While clustering analyzes the dataset to form clusters, predictive modeling in clustering uses these established groups to make future predictions.
+  \item \textbf{Data Requirements}:
+  Clustering operates on unlabeled data, whereas prediction in clustering may require labeled data derived from the clustering outcome.
+  \item \textbf{Outcome}:
+  Clustering results in a set of categorized data clusters, whereas prediction in clustering classifies new data points into these clusters.
+  
+\end{enumerate}
+
 \section{Statistical-based Ordinal Data Clustering}
 
 \subsection{Finite Mixture modeling}
