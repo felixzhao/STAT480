@@ -197,9 +197,13 @@ This advantage stems from two key factors: firstly, ordinal data do not presuppo
 
 \section{Methodology}
 
+The Proportional Odds Model (POM) and the Ordered Stereotype Regression Model (OSRM) are two pivotal approaches in statistical modeling that facilitate the implementation of Factorial Mixture Models (FMM) for ordinal data. Ordinal data is characterized by outcomes that are categories with a natural order, but the differences between these categories are not quantifiable. These methodologies are instrumental in analyzing and interpreting such data, providing a structured framework to understand the relationship between an ordinal response variable and a set of predictor variables.
+
 \subsection{Proportional Odds model}
 
-The Proportional Odds model is another approach which defined for an ordinal response variable $Y$ with $J$ ordered categories ($j=1, 2, \ldots, J$). 
+The Proportional Odds Model is specifically designed for ordinal response variables with ordered categories. It employs a cumulative log odds mechanism to express the probability of the response variable falling into a certain category or below, based on a set of predictors. This model is characterized by its proportional odds assumption, which stipulates a constant effect of predictors across all category thresholds, thereby simplifying the interpretation of the effects of predictor variables on the ordinal outcome.
+
+The Proportional Odds model defined for an ordinal response variable $Y$ with $J$ ordered categories ($j=1, 2, \ldots, J$). 
 Given a set of predictor variables represented by the vector $X$, the model expresses the cumulative log odds of $Y$ being less than or equal to a category $j$ as follows:
 
 \[
@@ -218,7 +222,9 @@ The Proportional Odds assumption implies that the vector of coefficients $\beta$
 
 \subsection{Ordered Stereotype Regression Model}
 
-The Ordered Stereotype Regression Model is a statistical approach designed to analyze ordinal dependent variables, where the outcomes are categories with a natural order but not a quantifiable difference between them.
+On the other hand, the Ordered Stereotype Regression Model offers a more flexible approach by allowing the effects of predictors to vary across categories. This variation is systematically controlled through a scaling parameter, ensuring that the model adheres to the inherent order within the ordinal data. The Ordered Stereotype Regression Model is particularly useful when the assumption of proportional odds is too restrictive or not met in the data.
+
+The Ordered Stereotype Regression Model is defined where the outcomes are categories with a natural order but not a quantifiable difference between them.
 
 Given an ordinal response variable $Y$ with categories ($j=1, 2, \ldots, J$), and a vector of independent variables $X$, the probability of $Y$ falling into the $j$th category, given $X = x$, is denoted as $P(Y = j | X = x)$.
 
