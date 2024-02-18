@@ -250,6 +250,41 @@ In the application of the EM algorithm to ordinal data clustering within finite 
 
 This methodology, as applied to ordinal data clustering, underscores the EM algorithm's versatility and efficacy in uncovering the latent structure within complex datasets. By leveraging the EM algorithm's strengths, researchers can navigate the challenges posed by incomplete data, ultimately enhancing our understanding of the underlying patterns and relationships within ordinal data.
 
+\subsection{Cluster Prediction for Ordinal Data}
+
+Finite Mixture Models (FMMs) offer a robust approach for clustering ordinal data, where the observations are categorized into a natural order but the distances between categories are not necessarily uniform or known. 
+This section introduces a streamlined approach for deducing the cluster membership of new observations by utilizing models that have been previously trained, thus bypassing the need for the computationally intensive Expectation-Maximization (E-M) algorithm with each new data instance. 
+The discussion will cover the methodology, criteria for deciding the optimal number of clusters, and the wide applicability of this technique. A principal advantage of employing pre-trained FMMs lies in their cost-efficiency. By avoiding the necessity to execute the E-M algorithm repeatedly for fresh datasets, the proposed method significantly reduces expenses, offering a dual benefit of decreased computational demand and enhanced cost savings. This dual benefit renders the approach particularly appealing across various domains, where it provides a scalable and economically viable solution for dynamic data clustering.
+
+\subsubsection*{Approach}
+
+The prediction of new observations' cluster memberships utilizing pre-trained FMMs involves a two-step process. Firstly, a Finite Mixture Model is trained on a dataset where the number of clusters (components) is determined based on model selection criteria such as Bayesian Information Criterion (BIC) or Akaike Information Criterion (AIC). This model training step involves the use of the Expectation-Maximization (E-M) algorithm to estimate the parameters of the mixture model, which can be computationally expensive, especially for large datasets.
+
+Once the model is trained, the parameters of each component (cluster) are fixed, and these parameters are used to calculate the likelihood of new observations belonging to each cluster. The key benefit of this approach is that it eliminates the need to re-run the E-M algorithm for each new observation, thereby significantly reducing computational costs and making the prediction process more efficient. This method leverages the probability distributions defined by the pre-trained model to assign new observations to the cluster with the highest likelihood, without updating the model parameters.
+
+\subsubsection*{How to Select the Number of Clusters}
+
+Selecting the appropriate number of clusters for FMMs is crucial for accurate and meaningful clustering. This selection can be guided by several criteria:
+
+\begin{itemize}
+    \item \textbf{Information Criteria:} The Bayesian Information Criterion (BIC) and Akaike Information Criterion (AIC) are popular measures for model selection. They balance model fit and complexity, penalizing models with more parameters. A lower value of BIC or AIC indicates a better model.
+    \item \textbf{Cross-Validation:} This involves partitioning the data into subsets, training the model on one subset, and validating it on another to evaluate its predictive performance. The number of clusters that yields the best predictive accuracy on the validation set is chosen.
+    \item \textbf{Interpretability and Domain Knowledge:} The selected number of clusters should also make sense in the context of the problem domain. In some cases, domain knowledge can guide the choice, favoring solutions that are interpretable and actionable.
+\end{itemize}
+
+\subsubsection*{Applications}
+
+The method of predicting cluster membership for new observations using pre-trained FMMs has broad applications across various fields:
+
+\begin{itemize}
+    \item \textbf{Marketing:} Segmenting customers based on purchasing behavior, preferences, or demographic characteristics to tailor marketing strategies.
+    \item \textbf{Healthcare:} Classifying patient profiles based on clinical or genetic data to inform treatment plans or identify risk groups.
+    \item \textbf{Finance:} Identifying clusters of financial transactions or customer profiles for fraud detection, risk assessment, or personalized financial advice.
+    \item \textbf{Social Science:} Analyzing survey data to uncover patterns in attitudes, preferences, or behaviors among different population segments.
+\end{itemize}
+
+This approach is particularly beneficial in scenarios where data continuously arrives, and there is a need for quick and cost-effective clustering without sacrificing accuracy. By leveraging pre-trained models, organizations can dynamically assign new data to clusters, enabling real-time insights and decision-making.
+
 \section{Research Goals}
 
 This research aims to systematically analyze and compare the performance of different predictive models in clustering ordinal data derived from various distributions. Recognizing that the clustering of ordinal data under normal distribution conditions has been well-researched, this work shifts the focus towards less commonly explored distributions, such as Bernoulli, Poisson, and others, to understand their impact on model performance. The primary objective is to elucidate how these types of distributions affect the models' ability to accurately predict the cluster memberships of ordinal data. By doing so, we intend to:
