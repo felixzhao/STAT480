@@ -37,7 +37,7 @@ Such advancements are crucial for applying ordinal data models in dynamic enviro
 
 In summary, this paper offers a comprehensive examination of methodologies for clustering and predicting ordinal data, enriched by a forward-looking investigation into their extension for predictive clustering of new data. This inquiry is intended as a resource for both researchers and practitioners, providing insights necessary for navigating the complexities of ordinal data and leveraging its full potential in analytical endeavors.
 
-\subsection*{Ordinal Data}
+\subsection{Ordinal Data}
 
 Ordinal data, a pivotal concept in statistical analysis, represents categorical data characterized by a meaningful order among its categories, without implying uniform differences between these ranks. Unlike nominal data, which merely categorizes without any implied ranking, ordinal data elevates the categorical analysis by introducing a hierarchy or sequence that is significant yet lacks quantifiable intervals between its elements. This characteristic distinguishes ordinal data: it conveys the sequence of values but remains silent on the magnitude of difference between successive ranks.
 
@@ -67,17 +67,17 @@ Ordinal data's prevalence is notably high in social sciences, especially in surv
 are not considered valid. 
 This demonstrates that performing arithmetic calculations on the numerical values assigned to the categories does not make sense.
 
-\begin{figure}[ht!] % 'h!' places the figure here, in the text
-    \centering % Centers the figure
-    \includegraphics[width=0.6\textwidth]{images/ordinal_data_dist.png} % Include the image with 50% of the text width
-    \caption{Latent trait interpretation of ordinal classification. 
-    In this plot, the logistic density represents the distribution of latent traits for a particular individual. 
-    It is assumed that a random variable is drawn from this density, and the value of this random variable determines an individual's classification. 
-    For example, if a deviate of 0.5 is drawn, the individual receives a D. (~\cite{Johnson1999}).} % Caption for the image
-    \label{fig:ordinal} % Label for referencing the figure in the text
-  \end{figure}
+% \begin{figure}[ht!] % 'h!' places the figure here, in the text
+%     \centering % Centers the figure
+%     \includegraphics[width=0.6\textwidth]{images/ordinal_data_dist.png} % Include the image with 50% of the text width
+%     \caption{"Latent trait interpretation of ordinal classification. 
+%     In this plot, the logistic density represents the distribution of latent traits for a particular individual. 
+%     It is assumed that a random variable is drawn from this density, and the value of this random variable determines an individual's classification. 
+%     For example, if a deviate of 0.5 is drawn, the individual receives a D." From (~\cite{Johnson1999}).} % Caption for the image
+%     \label{fig:ordinal} % Label for referencing the figure in the text
+%   \end{figure}
 
-\subsection*{Comparison with continuous numerical data}
+\subsubsection*{Comparison with continuous numerical data}
 
 In the context of statistical analysis, the distinction between ordinal and continuous numerical data types is pivotal, influencing both the choice of analytical methods and the depth of insights that can be derived. 
 Ordinal data, characterized by its capacity to rank order categories without indicating precise differences between them, is inherently less informative than continuous numerical data. 
@@ -95,7 +95,7 @@ its analytical limitations highlight the superior informational value of continu
 This distinction is crucial for researchers in the selection of appropriate statistical methods and in the interpretation of their data, 
 ensuring that conclusions drawn are both valid and meaningful.
 
-\subsection*{Clustering}
+\subsection{Clustering}
 
 Clustering is a fundamental technique in the field of data analysis and machine learning, aimed at grouping a set of objects in such a way that objects in the same group (or cluster) are more similar to each other than to those in other groups. Its applications span a wide range of areas including market research, pattern recognition, image analysis, and bioinformatics, among others. For instance, in market research, clustering can help identify distinct customer segments based on purchasing behavior, while in bioinformatics, it can be used to classify different types of genes or proteins with similar functions.
 
@@ -107,11 +107,11 @@ There are primarily two types of clustering: distance-based clustering and model
 
 Model-based clustering is often more suitable for ordinal data—data that contain natural, orderable categories. This is because ordinal data, which embody an inherent ranking or order (e.g., survey responses from "strongly agree" to "strongly disagree"), do not fit well with the distance metrics used in distance-based clustering, which treat distances between all pairs of categories as equal. Model-based clustering, on the other hand, can accommodate the ordinal nature by incorporating it into the model assumptions, allowing for a more nuanced understanding and grouping based on the inherent order of the data. This method can capture the ordinal information effectively, providing more meaningful and interpretable clusters for analysis.
 
-\subsection*{Prediction}
+\subsection{Prediction}
 
 Prediction in clustering encompasses the task of forecasting where new, unseen data points belong within a pre-established cluster framework, leveraging patterns discerned from a dataset. This process not only builds upon the foundational step of identifying clusters but also utilizes either post-clustering classification algorithms or direct predictive clustering techniques. The core objective is to employ the characteristics of existing clusters—such as their centroids and distribution—to accurately determine the most fitting cluster for each new data point. This approach bridges the gap between mere data grouping and the strategic allocation of future data instances, underscoring the predictive power inherent in a well-structured clustering analysis.
 
-\subsection*{Key Differences}
+\subsubsection*{key differences between Clustering and Prediction}
 
 \begin{enumerate}
   \item \textbf{Supervision}: 
@@ -127,9 +127,9 @@ Prediction in clustering encompasses the task of forecasting where new, unseen d
   
 \end{enumerate}
 
-\section{Statistical-based Ordinal Data Clustering}
+\subsection{Statistical-based Ordinal Data Clustering}
 
-\subsection{Finite Mixture modeling}
+\subsection*{Finite Mixture modeling}
 
 Finite mixture models have emerged as a versatile and powerful statistical tool, garnering increasing attention across various scientific and research disciplines. These models, predicated on the assumption that observed data arise from a blend of several probability distributions, each representing a distinct subpopulation, have revolutionized our approach to understanding complex data structures. The designation ``finite'' in finite mixture models is pivotal, indicating the specific, but variable, number of components or subgroups within the data. This finite aspect offers a balance between model complexity and interpretability, allowing for detailed yet manageable analysis of diverse datasets.
 
